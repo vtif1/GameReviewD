@@ -43,6 +43,9 @@ As funcionalidades e as permissões são divididas entre usuários comuns e admi
 
 ## Backend
 No terminal, abra a pasta do backend e execute o seguinte comando:
-```docker compose up --build -d```
+
+```bash
+docker compose up --build -d
+```
 
   
