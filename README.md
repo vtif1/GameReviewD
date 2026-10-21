@@ -38,3 +38,11 @@ As funcionalidades e as permissões são divididas entre usuários comuns e admi
 - Gerenciar desenvolvedoras, plataformas e gêneros;
 - Consultar solicitações de inclusão de jogos feitas por usuários;
 - Aprovar ou rejeitar as solicitações.
+
+### Como iniciar o projeto
+
+## Backend
+No terminal, abra a pasta do backend e execute o seguinte comando:
+```docker compose up --build -d```
+
+  
