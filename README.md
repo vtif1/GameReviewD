@@ -69,7 +69,7 @@ npm install
 npm run dev
 ```
 
-O comando "npm install" instala as dependências no projeto, e o "npm run dev" inicializa o servidor.
+O comando "npm install" instala as dependências no projeto, e o "npm run dev" inicializa o servidor React.
 Após a inicialização, o site pode ser acessado em http://localhost:5173.
 
 ## Credenciais de acesso 🔑
