@@ -41,11 +41,32 @@ As funcionalidades e as permissões são divididas entre usuários comuns e admi
 
 ### Como iniciar o projeto
 
+## Pré-requisitos
+
+Antes de iniciar o projeto, veja se sua máquina possui:
+
+- Docker
+
 ## Backend
 No terminal, abra a pasta do backend e execute o seguinte comando:
 
 ```bash
 docker compose up --build -d
 ```
+Caso queira resetar ou recriar os contêiners, além do banco de dados (os dados atuais serão perdidos), execute o comando:
 
-  
+```bash
+docker compose down -v
+```
+
+Após a inicialização, o webservice pode ser acessado em http://localhost:3000. A interface gráfica de controle do banco de dados pode ser acessada em http://localhost:8081.
+
+## Frontend
+No terminal, abra a pasta do frontend e execute os seguintes comandos:
+
+```bash
+npm install
+npm run dev
+```
+
+O comando "npm ins
