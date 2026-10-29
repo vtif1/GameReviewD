@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS arquivo (
+    id SERIAL PRIMARY KEY,
+    nome_original VARCHAR(255) NOT NULL,
+    tipo_mime VARCHAR(100) NOT NULL,
+    tamanho_bytes BIGINT NOT NULL,
+    conteudo BYTEA NOT NULL,
+    criado_em TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS usuario (
     id_usuario SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -5,10 +14,11 @@ CREATE TABLE IF NOT EXISTS usuario (
     data_nasc DATE NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     senha_hash CHAR(60) NOT NULL,
+    id_imagem_perfil INT,
     bio TEXT,
-    foto_perfil TEXT,
-    tipo VARCHAR(10) NOT NULL DEFAULT 'usuario'
-        CHECK(tipo IN('admin', 'usuario'))
+    admin BOOLEAN NOT NULL,
+
+    FOREIGN KEY (id_imagem_perfil) REFERENCES arquivo(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS jogo(
@@ -16,7 +26,9 @@ CREATE TABLE IF NOT EXISTS jogo(
     nome VARCHAR(100) NOT NULL,
     descricao TEXT NOT NULL,
     data_lancamento DATE,
-    imagem_url TEXT
+    id_imagem INT,
+
+    FOREIGN KEY (id_imagem) REFERENCES arquivo(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS desenvolvedora (
@@ -24,13 +36,17 @@ CREATE TABLE IF NOT EXISTS desenvolvedora (
     nome VARCHAR(100) NOT NULL UNIQUE,
     descricao TEXT,
     data_criacao DATE,
-    imagem_url TEXT
+    id_imagem INT,
+
+    FOREIGN KEY (id_imagem) REFERENCES arquivo(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS plataforma (
     id_plataforma SERIAL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL UNIQUE,
-    imagem_url TEXT
+    id_imagem INT,
+
+    FOREIGN KEY (id_imagem) REFERENCES arquivo(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS genero (
@@ -189,7 +205,7 @@ CREATE TABLE IF NOT EXISTS solicitacao_jogo_genero (
 INSERT INTO usuario (username, nome, data_nasc, email, senha_hash, tipo)
 VALUES (
     'vtoz', 'Vitor Manoel Cesarino', '2009-03-19', 
-    'v.manoel@aluno.ifsp.edu.br', '$2a$12$xchfLpFfuJZxGLd27mSIg.ZcFxtKyFGBPWN6FlHeHYyLWZmpR1Viq', 'admin'
+    'v.manoel@aluno.ifsp.edu.br', '$2a$12$xchfLpFfuJZxGLd27mSIg.ZcFxtKyFGBPWN6FlHeHYyLWZmpR1Viq', TRUE
 );
 
 -- Inserção de um usuário comum
@@ -198,7 +214,7 @@ VALUES (
 INSERT INTO usuario (username, nome, data_nasc, email, senha_hash, tipo)
 VALUES (
     'user', 'Usuário da Silva', '2000-12-25', 
-    'user123@gmail.com', '$2a$12$qWhbP1UpBbYl9OXzHSIb3OGXPR5YdQyxiUAE0j0tjhuVUXLMPOd0W', 'usuario'
+    'user123@gmail.com', '$2a$12$qWhbP1UpBbYl9OXzHSIb3OGXPR5YdQyxiUAE0j0tjhuVUXLMPOd0W', FALSE
 );
 
 
