@@ -5,6 +5,7 @@ function verificaId(req, res, next) {
         return res.status(400).json({ msg : "Parâmetro inválido."})
     }
 
+    req.id = id;
     next();
 }
 

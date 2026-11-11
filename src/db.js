@@ -1,4 +1,4 @@
-const { Pool } = require('pg');
+const { Pool, Connection } = require('pg');
 
 const pool = new Pool({
   host: process.env.DB_HOST || "database",
@@ -27,4 +27,4 @@ async function transaction(operar) {
   }
 }
 
-module.exports = { query, transaction };
+module.exports = { query, transaction, connect : () => pool.connect() };

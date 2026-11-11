@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -7,7 +9,11 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/hello", require("./routes/rota"));
-app.use("/usuario", require("./routes/usuario"))
+app.use("/usuario", require("./routes/usuario"));
+app.use("/jogo", require("./routes/jogo"));
+app.use("/plataforma", require("./routes/plataforma"));
+app.use("/genero", require("./routes/genero"));
+app.use("/desenvolvedora", require("./routes/desenvolvedor"));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "static", "index.html"));
