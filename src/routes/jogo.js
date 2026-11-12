@@ -911,9 +911,18 @@ router.post("/:id/avaliacoes", autenticaUsuario, verificaId, async (req, res) =>
 
     try {
 
+        const jogoExiste = await db.query("SELECT * FROM jogo WHERE id_jogo = $1", [idJogo]);
+        if (!jogoExiste.rowCount) {
+            return res.status(404).json({ msg: "Jogo não cadastrado." });
+        }
+
 
         if (Number.isNaN(estrelas) || !Number.isInteger(estrelas)) {
             return res.status(400).json({ msg: "Valor inválido para estrelas." });
+        }
+
+        if (estrelas < 1 || estrelas > 5) {
+            return res.status(400).json({ msg: "Estrelas apenas de 1 a 5." });
         }
 
         if (texto !== null && texto !== undefined) {
@@ -924,7 +933,7 @@ router.post("/:id/avaliacoes", autenticaUsuario, verificaId, async (req, res) =>
 
         const verificaDuplicidade = await db.query("SELECT * FROM avaliacao WHERE id_usuario = $1 AND id_jogo = $2", [logado, idJogo]);
         if (verificaDuplicidade.rowCount != 0) {
-            return res.status(409).json({ msg : "Você já fez uma avaliação a esse jogo, altere-a ou exclua e crie uma nova."});
+            return res.status(409).json({ msg: "Você já fez uma avaliação a esse jogo, altere-a ou exclua e crie uma nova." });
         }
 
         const adicionaAvaliacao = await db.query(
@@ -944,7 +953,75 @@ router.post("/:id/avaliacoes", autenticaUsuario, verificaId, async (req, res) =>
                 nome: jogo.rows[0].nome,
                 estrelas: estrelas,
                 texto: jogo.rows[0].texto,
-                data_criacao : jogo.rows[0].criado_em
+                data_criacao: jogo.rows[0].criado_em
+            }
+        });
+
+    } catch (error) {
+        return res.status(500).json({ msg: error.message });
+    }
+
+});
+
+// Edita uma avaliação
+
+router.put("/:id/avaliacoes", autenticaUsuario, verificaId, async (req, res) => {
+
+    const idJogo = req.id;
+    const logado = req.usuario;
+    let { estrelas, texto } = req.body || {};
+
+    try {
+
+        const verificaJogo = await db.query("SELECT * FROM jogo WHERE id_jogo = $1", [idJogo]);
+        if (!verificaJogo.rowCount) {
+            return res.status(404).json({ msg: "Jogo não encontrado." });
+        }
+
+        const dadosAntigos = await db.query("SELECT estrelas, texto FROM avaliacao WHERE id_jogo = $1 AND id_usuario = $2", [idJogo, logado]);
+        if (!dadosAntigos.rowCount) {
+            return res.status(404).json({ msg: "Avaliação não encontrada." });
+        }
+
+        if (estrelas !== null && estrelas !== undefined) {
+            if (Number.isNaN(estrelas) || !Number.isInteger(estrelas)) {
+                return res.status(400).json({ msg: "Valor inválido para estrelas." });
+            }
+
+            if (estrelas < 1 || estrelas > 5) {
+                return res.status(400).json({ msg: "Estrelas apenas de 1 a 5." });
+            }
+        } else {
+            estrelas = dadosAntigos.rows[0].estrelas;
+        }
+
+        if (texto !== null && texto !== undefined) {
+            if (typeof texto !== 'string') {
+                return res.status(400).json({ msg: "Texto inválido." });
+            }
+        } else {
+            texto = dadosAntigos.rows[0].texto;
+        }
+
+        const dataAtualizacao = new Date();
+        const atualizaAvaliacao = await db.query(
+            "UPDATE avaliacao SET estrelas = $1, texto = $2, atualizado_em = $3 WHERE id_jogo = $4 AND id_usuario = $5 RETURNING *",
+            [estrelas, texto, dataAtualizacao, idJogo, logado]
+        );
+
+        if (!atualizaAvaliacao.rowCount) {
+            return res.status(400).json({ msg: "Erro ao editar avaliação." });
+        }
+
+        const jogo = await db.query("SELECT j.nome, a.texto, a.criado_em FROM jogo j JOIN avaliacao a ON j.id_jogo = a.id_jogo WHERE j.id_jogo = $1", [idJogo]);
+
+        return res.status(200).json({
+            msg: "Avaliação editada com sucesso.",
+            jogo: {
+                nome: jogo.rows[0].nome,
+                estrelas: estrelas,
+                texto: jogo.rows[0].texto,
+                data_criacao: jogo.rows[0].criado_em
             }
         });
 
@@ -953,6 +1030,39 @@ router.post("/:id/avaliacoes", autenticaUsuario, verificaId, async (req, res) =>
     }
 
 })
+
+
+// Apaga uma avaliação de um jogo
+
+router.delete("/:id/avaliacoes", autenticaUsuario, verificaId, async (req, res) => {
+
+    const idJogo = req.id;
+    const logado = req.usuario;
+
+    try {
+
+        const verificaJogo = await db.query("SELECT * FROM jogo WHERE id_jogo = $1", [idJogo]);
+        if (!verificaJogo.rowCount) {
+            return res.status(404).json({ msg: "Jogo não encontrado." });
+        }
+
+        const verificaAvaliacao = await db.query("SELECT * FROM avaliacao WHERE id_jogo = $1 AND id_usuario = $2", [idJogo, logado]);
+        if (!verificaAvaliacao.rowCount) {
+            return res.status(404).json({ msg: "Avaliação não encontrada." });
+        }
+
+        const apagaAvaliacao = await db.query("DELETE FROM avaliacao WHERE id_jogo = $1 AND id_usuario = $2 RETURNING *", [idJogo, logado]);
+        if (!apagaAvaliacao.rowCount) {
+            return res.status(400).json({ msg: "Erro ao apagar avaliação." });
+        }
+
+        return res.status(200).json({ msg: "Avaliação apagada com sucesso." });
+
+    } catch (error) {
+        return res.status(500).json({ msg: "Erro geral." });
+    }
+
+});
 
 // Verifica o tamanho do arquivo enviado, e se foi enviado mais que um arquivo
 

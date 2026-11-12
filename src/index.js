@@ -8,7 +8,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/hello", require("./routes/rota"));
 app.use("/usuario", require("./routes/usuario"));
 app.use("/jogo", require("./routes/jogo"));
 app.use("/plataforma", require("./routes/plataforma"));

@@ -37,7 +37,7 @@ router.get("/:id", verificaId, async (req, res) => {
         const genero = r.rows[0];
         const jogos = await db.query(
             `SELECT j.nome FROM jogo j
-            JOIN jogo_genero jg ON j.id_jogo = jg.id_genero
+            JOIN jogo_genero jg ON j.id_jogo = jg.id_jogo
             JOIN genero g ON jg.id_genero = g.id_genero
             WHERE jg.id_genero = $1`,
             [idGenero]
@@ -62,7 +62,7 @@ router.post("/", autenticaUsuario, verificaAdmin, async (req, res) => {
             return res.status(400).json({ msg : "Nome inválido."});
         }
 
-        const verificaNome = await db.query("SELECT * FROM genero WHERE nome = $1", [nome]);
+        const verificaNome = await db.query("SELECT * FROM genero WHERE nome = $1", [nome.trim()]);
         if (verificaNome.rowCount != 0) {
             return res.status(409).json({ msg : "Gênero já existente."});
         }
@@ -113,9 +113,9 @@ router.put("/:id", autenticaUsuario, verificaAdmin, verificaId, async (req, res)
             novoNome = nome.trim();
         }
 
-        if (!descricao) {
+        if (descricao == null) {
             novaDescricao = dadosAtuais.rows[0].descricao;
-        } else if (typeof descricao != 'string' || descricao.trim() === "") {
+        } else if (typeof descricao != 'string') {
             return res.status(400).json({ msg : "Descrição inválida."})
         } else {
             novaDescricao = descricao.trim();
@@ -132,6 +132,10 @@ router.put("/:id", autenticaUsuario, verificaAdmin, verificaId, async (req, res)
     }
 
 });
+
+
+
+// Apaga um gênero
 
 router.delete("/:id", verificaId, autenticaUsuario, verificaAdmin, async (req, res) => {
 

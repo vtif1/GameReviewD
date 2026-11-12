@@ -76,7 +76,7 @@ router.get("/:id", verificaId, async (req, res) => {
         const plataforma = r.rows[0];
 
         const jogos = await db.query(
-            `SELECT j.nome FROM jogo j 
+            `SELECT j.nome, j.id_imagem FROM jogo j 
             JOIN jogo_plataforma jp ON j.id_jogo = jp.id_jogo 
             JOIN plataforma p ON jp.id_plataforma = p.id_plataforma
             WHERE jp.id_plataforma = $1`,
@@ -436,7 +436,6 @@ router.delete("/:id/foto", autenticaUsuario, verificaAdmin, verificaId, async (r
     }
 
 });
-
 
 
 router.use((err, req, res, next) => {

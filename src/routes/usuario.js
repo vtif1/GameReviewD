@@ -48,7 +48,7 @@ router.get("/", async (req, res) => {
 
     try {
 
-        const r = await db.query("SELECT id_usuario, username, nome, email, bio FROM usuario");
+        const r = await db.query("SELECT id_usuario, username, nome, email, bio, id_imagem_perfil FROM usuario");
 
         if (!r.rowCount) {
             return res.status(404).json({ msg: "Nenhum usuário cadastrado." })
@@ -70,10 +70,6 @@ router.get("/me", autenticaUsuario, async (req, res) => {
     const logado = req.usuario;
 
     try {
-
-        if (Number.isNaN(logado) || !Number.isInteger(logado)) {
-            return res.status(400).json({ msg: "Parâmetro inválido." })
-        }
 
         const existe = await db.query("SELECT * FROM usuario WHERE id_usuario = $1", [logado]);
         if (!existe.rowCount) {
@@ -105,7 +101,7 @@ router.get("/:id", verificaId, async (req, res) => {
 
     try {
 
-        const usuario = await db.query("SELECT id_usuario, username, nome, email, bio FROM usuario WHERE id_usuario = $1", [id]);
+        const usuario = await db.query("SELECT id_usuario, username, nome, email, bio, id_imagem_perfil FROM usuario WHERE id_usuario = $1", [id]);
 
         if (!usuario.rowCount) {
             return res.status(404).json({ msg: "Usuário não encontrado." });
@@ -326,13 +322,13 @@ router.put("/:id", upload.single("foto"), verificaId, autenticaUsuario, async (r
 
         const dadosAntigos = await db.query("SELECT * FROM usuario WHERE id_usuario = $1", [idUsuario]);
 
-        if (typeof username !== 'string') {
+        if (username && typeof username !== 'string') {
             return res.status(400).json({ msg: "Username inválido." });
         } else if (!username || username.trim() === "") {
             username = dadosAntigos.rows[0].username;
         }
 
-        if (typeof nome !== 'string') {
+        if (nome && typeof nome !== 'string') {
             return res.status(400).json({ msg: "Nome inválido." })
         } else if (!nome || nome.trim() === "") {
             nome = dadosAntigos.rows[0].nome;
@@ -446,7 +442,7 @@ router.put("/:id", upload.single("foto"), verificaId, autenticaUsuario, async (r
 
                 const atualizaUsuario = await client.query(
                     "UPDATE usuario SET username = $1, nome = $2, data_nasc = $3, email = $4, senha_hash = $5, bio = $6, id_imagem_perfil = $7 WHERE id_usuario = $8 RETURNING *",
-                    [username, nome, data_nasc, email, senhaHash, bio, idFoto, idUsuario]
+                    [username.trim(), nome, data_nasc, emailFormatado, senhaHash, bio, idFoto, idUsuario]
                 );
 
                 if (!atualizaUsuario.rowCount) {
@@ -575,7 +571,7 @@ router.delete("/:id/foto", verificaId, autenticaUsuario, async (req, res) => {
 
 // Deletar conta de usuário
 
-router.delete("/:id", verificaId, autenticaUsuario, async (req, res) => {
+router.delete("/:id", autenticaUsuario, verificaId, async (req, res) => {
     const idUsuario = req.id;
     let logado = req.usuario;
 
@@ -587,7 +583,7 @@ router.delete("/:id", verificaId, autenticaUsuario, async (req, res) => {
             return res.status(404).json({ msg: "Usuário não encontrado." })
         }
 
-        if (idUsuario != logado && !testeAdmin.rows[0].admin) {
+        if (idUsuario != logado && !teste.rows[0].admin) {
             return res.status(403).json({ msg: "Operação negada." })
         }
 
@@ -596,9 +592,10 @@ router.delete("/:id", verificaId, autenticaUsuario, async (req, res) => {
             return res.status(404).json({ msg: "Usuário não cadastrado." });
         }
 
+        let usuarioDeletado = null;
         try {
 
-            const usuarioDeletado = await db.transaction(async (client) => {
+            usuarioDeletado = await db.transaction(async (client) => {
 
                 const dadosUsuario = await client.query("SELECT id_imagem_perfil FROM usuario WHERE id_usuario = $1", [idUsuario]);
 
@@ -609,7 +606,6 @@ router.delete("/:id", verificaId, autenticaUsuario, async (req, res) => {
                 const idFoto = dadosUsuario.rows[0].id_imagem_perfil;
 
                 let caminhoFoto = null;
-
                 if (idFoto) {
                     const dadosArquivo = await client.query("SELECT extensao FROM arquivo WHERE id = $1", [idFoto]);
 
@@ -637,7 +633,7 @@ router.delete("/:id", verificaId, autenticaUsuario, async (req, res) => {
                     usuario: deletaUsuario.rows[0],
                     caminhoFoto: caminhoFoto
                 }
-            })
+            });
 
 
         } catch (error) {
@@ -657,7 +653,7 @@ router.delete("/:id", verificaId, autenticaUsuario, async (req, res) => {
         return res.status(200).json({ msg: "Usuário apagado com sucesso.", usuario: usuario });
 
     } catch (error) {
-        return res.status(500).json({ msg: "Erro geral." })
+        return res.status(500).json({ msg: error.message })
     }
 
 });
@@ -679,6 +675,8 @@ router.get("/me/avaliacoes", autenticaUsuario, async (req, res) => {
             return res.status(404).json({ msg: "Nenhuma avaliação registrada." })
         }
 
+        const verificaUsuario = await db.query("SELECT * FROM usuario WHERE id_usuario = $1", [logado]);
+
         const avaliacoesUsuario = {
             usuario: verificaUsuario.rows[0].username,
             avaliacoes: []
@@ -698,7 +696,7 @@ router.get("/me/avaliacoes", autenticaUsuario, async (req, res) => {
         return res.status(200).json(avaliacoesUsuario);
 
     } catch (error) {
-
+        return res.status(500).json({ msg : error.message})
     }
 
 });
@@ -728,6 +726,7 @@ router.get("/:id/avaliacoes", verificaId, async (req, res) => {
 
         const avaliacoesUsuario = {
             usuario: verificaUsuario.rows[0].username,
+            id_imagem: verificaUsuario.rows[0].id_imagem_perfil,
             avaliacoes: []
         }
 
@@ -802,7 +801,7 @@ router.get("/me/colecao/favoritos", autenticaUsuario, async (req, res) => {
     try {
 
         const colecao = await db.query(
-            `SELECT u.username, j.nome, j.descricao FROM usuario u
+            `SELECT u.username, j.nome, j.descricao, j.id_imagem FROM usuario u
             LEFT JOIN colecao_jogo_usuario cju ON u.id_usuario = cju.id_usuario
             LEFT JOIN jogo j ON j.id_jogo = cju.id_jogo AND cju.favorito = TRUE
             WHERE u.id_usuario = $1`,
@@ -817,10 +816,11 @@ router.get("/me/colecao/favoritos", autenticaUsuario, async (req, res) => {
         for (const jogo of colecao.rows) {
 
             if (jogo.nome != null) {
-                colecaoUsuario.jogos.push(
+                colecaoUsuario.favoritos.push(
                     {
                         jogo: jogo.nome,
-                        descricao: jogo.descricao
+                        descricao: jogo.descricao,
+                        imagem: jogo.id_imagem
                     }
                 )
             }
@@ -854,6 +854,10 @@ router.patch("/me/colecao/:id/favorito", autenticaUsuario, verificaId, async (re
 
         if (!verificaJogoColecao.rowCount) {
             return res.status(404).json({ msg: "Jogo não cadastrado na sua coleção." })
+        }
+
+        if (typeof favoritar !== 'boolean') {
+            return res.status(400).json({ msg : "Parâmetro inválido."});
         }
 
         const atualizaFavorito = await db.query(
@@ -1128,6 +1132,10 @@ router.post("/me/seguindo/:id", autenticaUsuario, verificaId, async (req, res) =
 
     try {
 
+        if (idUsuarioSeguir == logado) {
+            return res.status(400).json({ msg : "Você não pode seguir a si mesmo."})
+        }
+
         const verificaUsuario = await db.query("SELECT * FROM usuario WHERE id_usuario = $1", [idUsuarioSeguir]);
         if (!verificaUsuario.rowCount) {
             return res.status(404).json({ msg: "Usuário não encontrado." });
@@ -1182,13 +1190,13 @@ router.delete("/me/seguindo/:id", autenticaUsuario, verificaId, async (req, res)
         );
 
         if (!paraSeguir.rowCount) {
-            return res.status(400).json({ msg : "Erro ao parar de seguir usuário."});
+            return res.status(400).json({ msg: "Erro ao parar de seguir usuário." });
         }
 
 
-        return res.status(200).json({ msg : "Usuário deixado de seguir com sucesso."});
+        return res.status(200).json({ msg: "Usuário deixado de seguir com sucesso." });
     } catch (error) {
-        return res.status(500).json({ msg : "Erro geral."});
+        return res.status(500).json({ msg: "Erro geral." });
     }
 
 })

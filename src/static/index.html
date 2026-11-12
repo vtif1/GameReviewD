@@ -1,14 +1,1465 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<!doctype html>
+<html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página inicial</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GameLog - API</title>
+
+    <style>
+        :root {
+            --navy: #173b63;
+            --blue: #397fba;
+            --blue-dark: #28679e;
+            --blue-soft: #eaf4fc;
+            --border: #dce7f1;
+            --text: #2b3b4d;
+            --muted: #718397;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 34px 28px 60px;
+            line-height: 1.65;
+            color: var(--text);
+            background: linear-gradient(180deg,
+                    #edf5fc 0,
+                    #f7f9fc 330px,
+                    #f7f9fc 100%);
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 42px 28px 38px;
+            text-align: center;
+            color: white;
+            border-radius: 22px;
+            background: linear-gradient(125deg,
+                    #173b63,
+                    #286da5 65%,
+                    #4b91c5);
+            box-shadow: 0 12px 30px rgba(30, 75, 115, .16);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            right: -70px;
+            top: -115px;
+            border: 1px solid rgba(255, 255, 255, .16);
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 28px rgba(255, 255, 255, .04),
+                0 0 0 58px rgba(255, 255, 255, .035);
+        }
+
+        .hero-tag {
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 5px 11px;
+            border: 1px solid rgba(255, 255, 255, .28);
+            border-radius: 999px;
+            color: #e4f2ff;
+            font-size: .72em;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+        }
+
+        h1 {
+            margin: 0;
+            color: white;
+            font-size: clamp(2.1em, 5vw, 3em);
+            letter-spacing: -.8px;
+        }
+
+        h1 span {
+            color: #bfe2ff;
+        }
+
+        .hero p {
+            max-width: 760px;
+            margin: 10px auto 0;
+            color: #e5f2fc;
+            font-size: 1.02em;
+        }
+
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin: 20px 0 12px;
+        }
+
+        .info-card {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-height: 78px;
+            padding: 14px 17px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            box-shadow: 0 4px 14px rgba(34, 76, 115, .045);
+        }
+
+        .info-label {
+            color: var(--muted);
+            font-size: .68em;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .info-card>span:last-child {
+            color: var(--navy);
+            font-weight: bold;
+        }
+
+        .info-card code {
+            width: fit-content;
+        }
+
+        .intro-note {
+            margin: 14px 4px 30px;
+        }
+
+
+        h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 38px 0 15px;
+            padding: 0 0 9px 2px;
+            color: var(--navy);
+            border-bottom: 2px solid #dce8f3;
+            font-size: 1.38em;
+        }
+
+        h2::before {
+            content: "";
+            display: inline-block;
+            width: 5px;
+            height: 23px;
+            border-radius: 5px;
+            background: var(--blue);
+        }
+
+
+        table {
+            width: 100%;
+            margin: 15px 0 30px;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(34, 76, 115, .055);
+        }
+
+        th,
+        td {
+            padding: 12px 13px;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-right: 0;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        th {
+            color: var(--navy);
+            background: #eaf3fb;
+            font-size: .9em;
+            letter-spacing: .2px;
+        }
+
+        tbody tr:nth-child(even) td {
+            background: #fbfdff;
+        }
+
+        tbody tr:hover td {
+            background: #f0f7fd;
+        }
+
+
+        .method {
+            display: inline-block;
+            min-width: 58px;
+            padding: 3px 8px;
+            color: var(--blue-dark);
+            background: var(--blue-soft);
+            border: 1px solid #d6e8f7;
+            border-radius: 6px;
+            font-size: .82em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+
+        code {
+            padding: 3px 6px;
+            color: #245b87;
+            background: #edf5fb;
+            border: 1px solid #dceaf5;
+            border-radius: 6px;
+            font-family: Consolas, monospace;
+            font-size: .92em;
+            overflow-wrap: anywhere;
+        }
+
+        pre {
+            margin: 4px 0;
+            padding: 10px 11px;
+            color: #34495e;
+            background: #f5f9fd;
+            border: 1px solid #e0eaf3;
+            border-radius: 9px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font-size: .86em;
+        }
+
+
+        ul {
+            margin: 14px 0 28px;
+            padding: 17px 22px 17px 42px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(34, 76, 115, .045);
+        }
+
+        li {
+            margin: 7px 0;
+        }
+
+        li::marker {
+            color: var(--blue);
+        }
+
+        .note {
+            color: var(--muted);
+            font-size: .9em;
+        }
+
+        body>p:last-child {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+
+        @media (max-width: 900px) {
+            body {
+                padding: 22px 16px 40px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 9px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: normal;
+            }
+
+            th,
+            td {
+                min-width: 125px;
+                padding: 9px;
+            }
+
+            td:nth-child(3) {
+                min-width: 250px;
+            }
+
+            td:nth-child(4) {
+                min-width: 230px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 14px 10px 30px;
+            }
+
+            .hero {
+                padding: 32px 18px;
+                border-radius: 16px;
+            }
+
+            .hero p {
+                font-size: .93em;
+            }
+
+            h2 {
+                font-size: 1.2em;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Bem vindo ao express_template_docker</h1>
-    <p>Teste a rota <a href="/hello">neste link</a></p>
-    <p>Bom desenvolvimento!</p>
+
+    <header class="hero">
+        <div class="hero-tag">DOCUMENTAÇÃO • BACKEND</div>
+
+        <h1>GameLog <span>API</span></h1>
+
+        <p>
+            Documentação do serviço RESTful responsável pelo gerenciamento
+            de usuários, autenticação, avaliações, coleções, favoritos
+            e seguidores da plataforma GameLog.
+        </p>
+    </header>
+
+    <section class="info-grid">
+        <div class="info-card">
+            <span class="info-label">ENDEREÇO-BASE</span>
+            <code>http://localhost:3000</code>
+        </div>
+
+        <div class="info-card">
+            <span class="info-label">AUTENTICAÇÃO</span>
+            <span>JWT • Bearer Token</span>
+        </div>
+
+        <div class="info-card">
+            <span class="info-label">FORMATOS</span>
+            <span>JSON e multipart/form-data</span>
+        </div>
+    </section>
+
+    <h2>Usuários</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Exemplo</th>
+            <th>Descrição</th>
+            <th>Resultado</th>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET <a href="http://localhost:3000/usuario">/usuario</a></code></td>
+            <td>Retorna a lista de usuários cadastrados. Não exige autenticação.</td>
+            <td>
+                <pre>[{ "id_usuario": 1, "username": "jogador", "nome": "Nome" }, ...]</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET /usuario/me</code></td>
+            <td>Retorna os dados do perfil do usuário autenticado. Requer token JWT.</td>
+            <td>
+                <pre>{ "nome": "Nome", "username": "jogador", "data_nasc": "2008-05-10", "bio": null, "id_imagem_perfil": null }</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET <a href="http://localhost:3000/usuario/2">/usuario/2</a></code></td>
+            <td>Busca o perfil público de um usuário pelo ID (por exemplo, 10). Não exige autenticação.</td>
+            <td>
+                <pre>{ "id_usuario": 10, "username": "jogador", "nome": "Nome", "email": "usuario@email.com", "bio": null }</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">POST</td>
+            <td><code>POST /usuario</code></td>
+            <td>
+                Cadastra um usuário. Requer <b>username</b>, <b>nome</b>,
+                <b>data_nasc</b>, <b>email</b> e <b>senha</b>.
+                <b>bio</b> e <b>foto</b> são opcionais.
+                A foto deve ser enviada no campo <code>foto</code>.
+                O cadastro valida idade mínima de 14 anos e senha com
+                pelo menos 8 caracteres.
+            </td>
+            <td>
+                <pre>{ "id_usuario": 1, "username": "jogador", "nome": "Nome", "email": "usuario@email.com", "bio": null, "admin": false }</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">POST</td>
+            <td><code>POST /usuario/login</code></td>
+            <td>
+                Efetua login. Requer <b>login</b> e <b>senha</b> no corpo
+                da requisição. O campo <b>login</b> aceita username ou e-mail.
+            </td>
+            <td>
+                <pre>{ "token": "JWT...", "usuario": { "id_usuario": 1, "username": "jogador", "nome": "Nome" } }</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">PUT</td>
+            <td><code>PUT /usuario/10</code></td>
+            <td>
+                Atualiza o perfil do usuário de ID 10. Requer autenticação
+                e permite alterar somente o próprio perfil.
+                Os campos <b>username</b>, <b>nome</b>, <b>data_nasc</b>,
+                <b>email</b>, <b>bio</b> e <b>foto</b> são opcionais;
+                os campos não enviados devem ser mantidos.
+                A foto é enviada como <code>foto</code>.
+            </td>
+            <td>
+                <pre>{ "msg": "Usuário atualizado com sucesso" }</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">DELETE</td>
+            <td><code>DELETE /usuario/10/foto</code></td>
+            <td>
+                Remove a foto de perfil do usuário de ID 10.
+                Requer autenticação e permissão sobre o próprio perfil.
+            </td>
+            <td>
+                <pre>{ "msg": "Foto removida com sucesso" }</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">DELETE</td>
+            <td><code>DELETE /usuario/10</code></td>
+            <td>
+                Exclui o usuário de ID 10. A rota foi implementada com
+                a intenção de permitir a exclusão pelo próprio usuário
+                ou por um administrador. Requer autenticação.
+            </td>
+            <td>
+                <pre>{ "msg": "Usuário deletado com sucesso" }</pre>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Avaliações</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Exemplo</th>
+            <th>Descrição</th>
+            <th>Resultado</th>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET /usuario/me/avaliacoes</code></td>
+            <td>Retorna as avaliações feitas pelo usuário autenticado. Requer token JWT.</td>
+            <td>
+                <pre>[{ "nome": "Jogo", "estrelas": 5, "texto": "Ótimo jogo", "criado_em": "2026-11-11" }, ...]</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET <a href="http://localhost:3000/usuario/2/avaliacoes">/usuario/2/avaliacoes</a></code></td>
+            <td>Retorna as avaliações feitas pelo usuário de ID 2. Não exige autenticação.</td>
+            <td>
+                <pre>[{ "nome": "Jogo", "estrelas": 5, "texto": "Ótimo jogo", "criado_em": "2026-11-11" }, ...]</pre>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Coleção de jogos</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Exemplo</th>
+            <th>Descrição</th>
+            <th>Resultado</th>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET /usuario/me/colecao</code></td>
+            <td>Retorna os jogos da coleção do usuário autenticado, incluindo as informações de cada jogo. Requer token
+                JWT.</td>
+            <td>
+                <pre>[{ "id_jogo": 1, "nome": "Jogo", "descricao": "...", "status": "quero_jogar", "favorito": false }, ...]</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET /usuario/me/colecao/favoritos</code></td>
+            <td>Retorna somente os jogos marcados como favoritos pelo usuário autenticado. Requer token JWT.</td>
+            <td>
+                <pre>[{ "id_jogo": 1, "nome": "Jogo", "descricao": "...", "favorito": true }, ...]</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">PATCH</td>
+            <td><code>PATCH /usuario/me/colecao/10/favorito</code></td>
+            <td>
+                Marca ou desmarca o jogo de ID 10 como favorito na coleção
+                do usuário autenticado. Requer o atributo
+                <b>favoritar</b> (boolean) no corpo da requisição.
+            </td>
+            <td>
+                <pre>{ "msg": "Favorito atualizado com sucesso" }</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">PATCH</td>
+            <td><code>PATCH /usuario/me/colecao/10</code></td>
+            <td>
+                Altera o status do jogo de ID 10 na coleção do usuário
+                autenticado. Requer o atributo <b>status</b>, que deve ser
+                um dos valores: <code>quero_jogar</code>,
+                <code>jogando</code>, <code>finalizado</code> ou
+                <code>abandonado</code>.
+            </td>
+            <td>
+                <pre>{ "msg": "Status atualizado com sucesso" }</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET /usuario/10/colecao</code></td>
+            <td>Retorna a coleção pública do usuário de ID 10. Não exige autenticação.</td>
+            <td>
+                <pre>[{ "id_jogo": 1, "nome": "Jogo", "descricao": "..." }, ...]</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">POST</td>
+            <td><code>POST /usuario/me/colecao/10</code></td>
+            <td>
+                Adiciona o jogo de ID 10 à coleção do usuário autenticado.
+                O status inicial é <code>quero_jogar</code> e o jogo começa
+                como não favorito, conforme os valores padrão do banco.
+            </td>
+            <td>
+                <pre>{ "msg": "Jogo adicionado à coleção com sucesso" }</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">DELETE</td>
+            <td><code>DELETE /usuario/me/colecao/10</code></td>
+            <td>
+                Remove o jogo de ID 10 da coleção do usuário autenticado.
+                Ao remover a relação, o jogo também deixa de ser favorito
+                para esse usuário.
+            </td>
+            <td>
+                <pre>{ "msg": "Jogo removido da coleção com sucesso" }</pre>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Seguidores</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Exemplo</th>
+            <th>Descrição</th>
+            <th>Resultado</th>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET /usuario/10/seguidores</code></td>
+            <td>Retorna a lista de usuários que seguem o usuário de ID 10. Não exige autenticação.</td>
+            <td>
+                <pre>[{ "username": "jogador1" }, { "username": "jogador2" }, ...]</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET /usuario/10/seguindo</code></td>
+            <td>Retorna a lista de usuários que o usuário de ID 10 está seguindo. Não exige autenticação.</td>
+            <td>
+                <pre>[{ "username": "jogador1" }, { "username": "jogador2" }, ...]</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">POST</td>
+            <td><code>POST /usuario/me/seguindo/10</code></td>
+            <td>
+                Faz o usuário autenticado seguir o usuário de ID 10.
+                Requer token JWT. Se já existir essa relação, a rota
+                retorna conflito.
+            </td>
+            <td>
+                <pre>{ "msg": "Usuário seguido com sucesso" }</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">DELETE</td>
+            <td><code>DELETE /usuario/me/seguindo/10</code></td>
+            <td>
+                Remove a relação de seguimento entre o usuário
+                autenticado e o usuário de ID 10.
+            </td>
+            <td>
+                <pre>{ "msg": "Deixou de seguir o usuário com sucesso" }</pre>
+            </td>
+        </tr>
+    </table>
+
+
+
+    <h2>Jogos</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Exemplo</th>
+            <th>Descrição</th>
+            <th>Resultado</th>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET /jogo</code></td>
+            <td>
+                Retorna todos os jogos cadastrados, incluindo suas respectivas
+                plataformas, gêneros e desenvolvedoras relacionadas.
+                Não exige autenticação.
+            </td>
+            <td>
+                <pre>[
+    {
+        "id_jogo": 1,
+        "nome": "Exemplo",
+        "descricao": "Descrição do jogo",
+        "data_lancamento": "2024-01-01",
+        "id_imagem": null,
+        "plataformas": [...],
+        "generos": [...],
+        "desenvolvedores": [...]
+    }
+]</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET /jogo/10</code></td>
+            <td>
+                Busca um jogo específico pelo ID (por exemplo, 10).
+                Retorna seus dados, além das plataformas, gêneros e
+                desenvolvedoras relacionadas. Não exige autenticação.
+            </td>
+            <td>
+                <pre>{
+    "id_jogo": 10,
+    "nome": "Exemplo",
+    "descricao": "Descrição do jogo",
+    "data_lancamento": "2024-01-01",
+    "id_imagem": null,
+    "plataformas": [...],
+    "generos": [...],
+    "desenvolvedores": [...]
+}</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">POST</td>
+            <td><code>POST /jogo</code></td>
+            <td>
+                Cadastra um novo jogo. Somente administradores podem realizar
+                essa operação. Requer <b>nome</b>, <b>descricao</b>,
+                <b>desenvolvedores</b>, <b>generos</b> e <b>plataformas</b>.
+                Os campos <b>data_lancamento</b> e <b>foto</b> são opcionais.
+                Os relacionamentos devem ser enviados como arrays em formato
+                JSON. A imagem deve ser enviada no campo <code>foto</code>.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Jogo adicionado."
+}</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">PUT</td>
+            <td><code>PUT /jogo/10</code></td>
+            <td>
+                Atualiza os dados do jogo de ID 10. Somente administradores
+                podem realizar essa operação. Os campos <b>nome</b>,
+                <b>descricao</b>, <b>data_lancamento</b> e <b>foto</b>
+                são opcionais. Os campos não enviados mantêm seus valores
+                anteriores. A substituição da foto é feita pelo envio de
+                uma nova imagem.
+                As plataformas, gêneros e desenvolvedoras são alterados
+                por rotas próprias.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Dados alterados com sucesso.",
+    "jogo": {
+        "id_jogo": 10,
+        "nome": "Exemplo atualizado",
+        "descricao": "Nova descrição",
+        "data_lancamento": "2024-01-01",
+        "id_imagem": "uuid-da-imagem"
+    }
+}</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">DELETE</td>
+            <td><code>DELETE /jogo/10</code></td>
+            <td>
+                Exclui o jogo de ID 10. Somente administradores podem realizar
+                essa operação. Também remove a imagem associada ao jogo,
+                quando houver. As relações com avaliações, gêneros,
+                plataformas e desenvolvedoras são removidas conforme as
+                regras de exclusão do banco de dados.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Jogo apagado com sucesso.",
+    "jogo": {...}
+}</pre>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Foto do jogo</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Exemplo</th>
+            <th>Descrição</th>
+            <th>Resultado</th>
+        </tr>
+
+        <tr>
+            <td class="method">DELETE</td>
+            <td><code>DELETE /jogo/10/foto</code></td>
+            <td>
+                Remove a imagem associada ao jogo de ID 10.
+                Somente administradores podem realizar essa operação.
+                Não exige atributos no corpo da requisição.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Foto removida."
+}</pre>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Desenvolvedoras do jogo</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Exemplo</th>
+            <th>Descrição</th>
+            <th>Resultado</th>
+        </tr>
+
+        <tr>
+            <td class="method">POST</td>
+            <td><code>POST /jogo/10/desenvolvedores</code></td>
+            <td>
+                Adiciona uma desenvolvedora ao jogo de ID 10.
+                Somente administradores podem realizar essa operação.
+                Requer o atributo <b>desenvolvedora</b> no corpo JSON,
+                contendo o ID da desenvolvedora.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Desenvolvedora adicionada ao jogo."
+}</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">DELETE</td>
+            <td><code>DELETE /jogo/10/desenvolvedores/3</code></td>
+            <td>
+                Remove a desenvolvedora de ID 3 da relação com o jogo
+                de ID 10. Somente administradores podem realizar essa operação.
+                Não exige atributos no corpo da requisição.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Desenvolvedora removida do jogo."
+}</pre>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Gêneros do jogo</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Exemplo</th>
+            <th>Descrição</th>
+            <th>Resultado</th>
+        </tr>
+
+        <tr>
+            <td class="method">POST</td>
+            <td><code>POST /jogo/10/generos</code></td>
+            <td>
+                Adiciona um gênero ao jogo de ID 10.
+                Somente administradores podem realizar essa operação.
+                Requer o atributo <b>genero</b> no corpo JSON,
+                contendo o ID do gênero.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Gênero adicionado ao jogo."
+}</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">DELETE</td>
+            <td><code>DELETE /jogo/10/generos/2</code></td>
+            <td>
+                Remove o gênero de ID 2 da relação com o jogo de ID 10.
+                Somente administradores podem realizar essa operação.
+                Não exige atributos no corpo da requisição.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Gênero removido do jogo."
+}</pre>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Plataformas do jogo</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Exemplo</th>
+            <th>Descrição</th>
+            <th>Resultado</th>
+        </tr>
+
+        <tr>
+            <td class="method">POST</td>
+            <td><code>POST /jogo/10/plataformas</code></td>
+            <td>
+                Adiciona uma plataforma ao jogo de ID 10.
+                Somente administradores podem realizar essa operação.
+                Requer o atributo <b>plataforma</b> no corpo JSON,
+                contendo o ID da plataforma.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Plataforma adicionada ao jogo."
+}</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">DELETE</td>
+            <td><code>DELETE /jogo/10/plataformas/4</code></td>
+            <td>
+                Remove a plataforma de ID 4 da relação com o jogo de ID 10.
+                Somente administradores podem realizar essa operação.
+                Não exige atributos no corpo da requisição.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Plataforma removida do jogo."
+}</pre>
+            </td>
+        </tr>
+    </table>
+
+    <h2>Avaliações de um jogo</h2>
+
+    <table>
+        <tr>
+            <th>Método</th>
+            <th>Exemplo</th>
+            <th>Descrição</th>
+            <th>Resultado</th>
+        </tr>
+
+        <tr>
+            <td class="method">GET</td>
+            <td><code>GET /jogo/10/avaliacoes</code></td>
+            <td>
+                Retorna as avaliações feitas para o jogo de ID 10,
+                incluindo informações do jogo e dos usuários que avaliaram.
+                Não exige autenticação.
+            </td>
+            <td>
+                <pre>{
+    "jogo": "Exemplo",
+    "descricao": "Descrição do jogo",
+    "avaliacoes": [
+        {
+            "usuario": "jogador1",
+            "estrelas": 5,
+            "feedback": "Ótimo jogo!"
+        }
+    ]
+}</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">POST</td>
+            <td><code>POST /jogo/10/avaliacoes</code></td>
+            <td>
+                Registra uma avaliação para o jogo de ID 10 em nome do
+                usuário autenticado. Requer <b>estrelas</b> (número inteiro)
+                e aceita <b>texto</b> (string) como opcional.
+                Cada usuário pode ter somente uma avaliação por jogo.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Avaliação registrada com sucesso.",
+    "jogo": {
+        "nome": "Exemplo",
+        "estrelas": 5,
+        "texto": "Ótimo jogo!"
+    }
+}</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">PUT</td>
+            <td><code>PUT /jogo/10/avaliacoes</code></td>
+            <td>
+                Edita a avaliação do usuário autenticado para o jogo
+                de ID 10. Os atributos <b>estrelas</b> e <b>texto</b>
+                são opcionais. O campo <b>texto</b> também pode receber
+                <code>null</code> para remover o comentário.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Avaliação editada com sucesso.",
+    "jogo": {
+        "nome": "Exemplo",
+        "estrelas": 4,
+        "texto": "Gostei bastante."
+    }
+}</pre>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="method">DELETE</td>
+            <td><code>DELETE /jogo/10/avaliacoes</code></td>
+            <td>
+                Exclui a avaliação do usuário autenticado para o jogo
+                de ID 10. Não exige atributos no corpo da requisição.
+            </td>
+            <td>
+                <pre>{
+    "msg": "Avaliação apagada com sucesso."
+}</pre>
+            </td>
+        </tr>
+    </table>
+
+
+    <section id="desenvolvedoras">
+        <h2>Desenvolvedoras</h2>
+
+        <p>
+            Rotas responsáveis por consultar, cadastrar, editar e excluir
+            desenvolvedoras, incluindo o gerenciamento de suas imagens.
+            As operações de cadastro, edição e exclusão são restritas a administradores.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Método</th>
+                    <th>Exemplo</th>
+                    <th>Descrição</th>
+                    <th>Resultado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="method get">GET</span></td>
+                    <td><code>/desenvolvedora</code></td>
+                    <td>Lista todas as desenvolvedoras cadastradas.</td>
+                    <td>Retorna um array com os dados das desenvolvedoras. Caso não existam registros, retorna 404.</td>
+                </tr>
+                <tr>
+                    <td><span class="method get">GET</span></td>
+                    <td><code>/desenvolvedora/:id</code></td>
+                    <td>Busca uma desenvolvedora pelo ID e apresenta os jogos associados a ela.</td>
+                    <td>Retorna os dados da desenvolvedora junto com um array de jogos. Retorna 404 caso não seja
+                        encontrada.</td>
+                </tr>
+                <tr>
+                    <td><span class="method post">POST</span></td>
+                    <td><code>/desenvolvedora</code></td>
+                    <td>Cadastra uma nova desenvolvedora. Requer autenticação e permissão de administrador.</td>
+                    <td>Retorna 200 com uma mensagem de confirmação e os dados cadastrados.</td>
+                </tr>
+                <tr>
+                    <td><span class="method put">PUT</span></td>
+                    <td><code>/desenvolvedora/:id</code></td>
+                    <td>Atualiza os dados de uma desenvolvedora. Requer autenticação e permissão de administrador.</td>
+                    <td>Retorna 200 com uma mensagem de confirmação e os dados atualizados.</td>
+                </tr>
+                <tr>
+                    <td><span class="method delete">DELETE</span></td>
+                    <td><code>/desenvolvedora/:id/foto</code></td>
+                    <td>Remove a imagem associada à desenvolvedora. Requer autenticação e permissão de administrador.
+                    </td>
+                    <td>Retorna 200 com a mensagem "Foto removida."</td>
+                </tr>
+                <tr>
+                    <td><span class="method delete">DELETE</span></td>
+                    <td><code>/desenvolvedora/:id</code></td>
+                    <td>Exclui uma desenvolvedora e sua imagem, caso exista. Requer autenticação e permissão de
+                        administrador.</td>
+                    <td>Retorna 200 com uma mensagem de confirmação e os dados da desenvolvedora excluída, sem o campo
+                        id_imagem.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Cadastro de desenvolvedora</h3>
+
+        <p>
+            <strong>Rota:</strong> <code>POST /desenvolvedora</code>
+        </p>
+        <p>
+            <strong>Formato:</strong> <code>multipart/form-data</code>
+        </p>
+        <p><strong>Autenticação:</strong> obrigatória, com permissão de administrador.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Atributo</th>
+                    <th>Tipo</th>
+                    <th>Obrigatório?</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>nome</code></td>
+                    <td>String</td>
+                    <td>Sim</td>
+                    <td>Nome da desenvolvedora. Não pode estar vazio ou já cadastrado.</td>
+                </tr>
+                <tr>
+                    <td><code>descricao</code></td>
+                    <td>String</td>
+                    <td>Sim</td>
+                    <td>Descrição da desenvolvedora. Não pode estar vazia.</td>
+                </tr>
+                <tr>
+                    <td><code>data_criacao</code></td>
+                    <td>Date</td>
+                    <td>Sim</td>
+                    <td>Data de criação da desenvolvedora. Deve ser uma data válida.</td>
+                </tr>
+                <tr>
+                    <td><code>foto</code></td>
+                    <td>Arquivo</td>
+                    <td>Não</td>
+                    <td>Imagem da desenvolvedora. Aceita apenas arquivos de imagem de até 5 MB.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Exemplo de resposta:</strong></p>
+        <pre><code>{
+    "msg": "Desenvolvedora adicionada.",
+    "desenvolvedora": {
+        "id_desenvolvedora": 1,
+        "nome": "Nintendo",
+        "descricao": "Empresa desenvolvedora de jogos.",
+        "data_criacao": "1889-09-23",
+        "id_imagem": "uuid-da-imagem"
+    }
+}</code></pre>
+
+        <h3>Edição de desenvolvedora</h3>
+
+        <p>
+            <strong>Rota:</strong> <code>PUT /desenvolvedora/:id</code>
+        </p>
+        <p>
+            <strong>Formato:</strong> <code>multipart/form-data</code>
+        </p>
+        <p>
+            <strong>Autenticação:</strong> obrigatória, com permissão de administrador.
+        </p>
+
+        <p>
+            Todos os atributos são opcionais. Caso um atributo não seja enviado
+            ou esteja vazio, o valor anterior será mantido. O envio de uma nova
+            foto substitui a imagem anterior.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Atributo</th>
+                    <th>Tipo</th>
+                    <th>Obrigatório?</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>nome</code></td>
+                    <td>String</td>
+                    <td>Não</td>
+                    <td>Nome atualizado da desenvolvedora.</td>
+                </tr>
+                <tr>
+                    <td><code>descricao</code></td>
+                    <td>String</td>
+                    <td>Não</td>
+                    <td>Nova descrição da desenvolvedora.</td>
+                </tr>
+                <tr>
+                    <td><code>data_criacao</code></td>
+                    <td>Date</td>
+                    <td>Não</td>
+                    <td>Nova data de criação. Deve ser válida quando enviada.</td>
+                </tr>
+                <tr>
+                    <td><code>foto</code></td>
+                    <td>Arquivo</td>
+                    <td>Não</td>
+                    <td>Nova imagem da desenvolvedora, limitada a 5 MB.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p><strong>Exemplo de resposta:</strong></p>
+        <pre><code>{
+    "msg": "Dados alterados com sucesso.",
+    "desenvolvedora": {
+        "id_desenvolvedora": 1,
+        "nome": "Nintendo",
+        "descricao": "Nova descrição.",
+        "data_criacao": "1889-09-23",
+        "id_imagem": "uuid-da-imagem"
+    }
+}</code></pre>
+
+        <h3>Consulta de desenvolvedora por ID</h3>
+
+        <p>
+            <strong>Rota:</strong> <code>GET /desenvolvedora/:id</code>
+        </p>
+        <p><strong>Autenticação:</strong> não é necessária.</p>
+
+        <p>
+            Além dos dados da desenvolvedora, a resposta apresenta os jogos
+            associados a ela, contendo o nome e o ID da imagem de cada jogo.
+        </p>
+
+        <p><strong>Exemplo de resposta:</strong></p>
+        <pre><code>{
+    "id_desenvolvedora": 1,
+    "nome": "Nintendo",
+    "descricao": "Empresa desenvolvedora de jogos.",
+    "data_criacao": "1889-09-23",
+    "id_imagem": "uuid-da-imagem",
+    "jogos": [
+        {
+            "nome": "The Legend of Zelda",
+            "id_imagem": "uuid-da-imagem-do-jogo"
+        }
+    ]
+}</code></pre>
+
+        <h3>Remoção de imagem</h3>
+
+        <p>
+            <strong>Rota:</strong> <code>DELETE /desenvolvedora/:id/foto</code>
+        </p>
+        <p><strong>Autenticação:</strong> obrigatória, com permissão de administrador.</p>
+        <p><strong>Corpo da requisição:</strong> não possui.</p>
+
+        <p>
+            Remove o registro da imagem no banco de dados e o arquivo correspondente
+            na pasta de uploads. A desenvolvedora permanece cadastrada.
+        </p>
+
+        <p><strong>Exemplo de resposta:</strong></p>
+        <pre><code>{
+    "msg": "Foto removida."
+}</code></pre>
+
+        <h3>Exclusão de desenvolvedora</h3>
+
+        <p>
+            <strong>Rota:</strong> <code>DELETE /desenvolvedora/:id</code>
+        </p>
+        <p><strong>Autenticação:</strong> obrigatória, com permissão de administrador.</p>
+        <p><strong>Corpo da requisição:</strong> não possui.</p>
+
+        <p>
+            Exclui a desenvolvedora do banco de dados e remove sua imagem,
+            caso esteja cadastrada.
+        </p>
+
+        <p><strong>Exemplo de resposta:</strong></p>
+        <pre><code>{
+    "msg": "Desenvolvedora apagada.",
+    "desenvolvedora": {
+        "id_desenvolvedora": 1,
+        "nome": "Nintendo",
+        "descricao": "Empresa desenvolvedora de jogos.",
+        "data_criacao": "1889-09-23"
+    }
+}</code></pre>
+
+    </section>
+
+
+
+    <section id="plataformas">
+        <h2>Plataformas</h2>
+
+        <p>
+            Rotas responsáveis por consultar, cadastrar, editar e excluir
+            plataformas de jogos.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Método</th>
+                    <th>Rota</th>
+                    <th>Descrição</th>
+                    <th>Autenticação</th>
+                    <th>Resultado esperado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="method get">GET</span></td>
+                    <td><code><a href="/plataforma">/plataforma</a></code></td>
+                    <td>Lista todas as plataformas cadastradas.</td>
+                    <td>Não</td>
+                    <td>
+                        <pre><code>[
+  {
+    "nome": "PlayStation 5",
+    "descricao": "Console da Sony."
+  },
+  {
+    "nome": "Xbox Series X",
+    "descricao": "Console da Microsoft."
+  }
+]</code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="method get">GET</span></td>
+                    <td><code><a href="/plataforma/1">/plataforma/1</a></code></td>
+                    <td>Busca uma plataforma pelo ID e seus jogos associados.</td>
+                    <td>Não</td>
+                    <td>
+                        <pre><code>{
+  "nome": "PlayStation 5",
+  "descricao": "Console da Sony.",
+  "jogos": [
+    {
+      "nome": "God of War Ragnarök",
+      "id_imagem": "uuid-da-imagem"
+    }
+  ]
+}</code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="method post">POST</span></td>
+                    <td><code>/plataforma</code></td>
+                    <td>Cadastra uma nova plataforma.</td>
+                    <td>Admin</td>
+                    <td>
+                        <pre><code>{
+  "msg": "Plataforma adicionada.",
+  "plataforma": {
+    "id_plataforma": 1,
+    "nome": "PlayStation 5",
+    "descricao": "Console da Sony.",
+    "id_imagem": "uuid-da-imagem"
+  }
+}</code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="method put">PUT</span></td>
+                    <td><code>/plataforma/1</code></td>
+                    <td>Atualiza os dados de uma plataforma.</td>
+                    <td>Admin</td>
+                    <td>
+                        <pre><code>{
+  "msg": "Dados alterados com sucesso.",
+  "plataforma": {
+    "id_plataforma": 1,
+    "nome": "PlayStation 5",
+    "descricao": "Console atualizado.",
+    "id_imagem": "uuid-da-nova-imagem"
+  }
+}</code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="method delete">DELETE</span></td>
+                    <td><code>/plataforma/1/foto</code></td>
+                    <td>Remove a imagem da plataforma.</td>
+                    <td>Admin</td>
+                    <td>
+                        <pre><code>{
+  "msg": "Foto removida."
+}</code></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="method delete">DELETE</span></td>
+                    <td><code>/plataforma/1</code></td>
+                    <td>Exclui uma plataforma e sua imagem, caso exista.</td>
+                    <td>Admin</td>
+                    <td>
+                        <pre><code>{
+  "msg": "Plataforma apagada.",
+  "plataforma": {
+    "id_plataforma": 1,
+    "nome": "PlayStation 5",
+    "descricao": "Console da Sony."
+  }
+}</code></pre>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Cadastro de plataforma</h3>
+
+        <p><strong>Rota:</strong> <code>POST /plataforma</code></p>
+        <p><strong>Formato:</strong> <code>multipart/form-data</code></p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Atributo</th>
+                    <th>Tipo</th>
+                    <th>Obrigatório</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>nome</code></td>
+                    <td>String</td>
+                    <td>Sim</td>
+                    <td>Nome da plataforma.</td>
+                </tr>
+                <tr>
+                    <td><code>descricao</code></td>
+                    <td>String</td>
+                    <td>Sim</td>
+                    <td>Descrição da plataforma.</td>
+                </tr>
+                <tr>
+                    <td><code>foto</code></td>
+                    <td>Arquivo</td>
+                    <td>Não</td>
+                    <td>Imagem da plataforma, com limite de 5 MB.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Edição de plataforma</h3>
+
+        <p><strong>Rota:</strong> <code>PUT /plataforma/:id</code></p>
+        <p><strong>Formato:</strong> <code>multipart/form-data</code></p>
+
+        <p>
+            Todos os atributos são opcionais. Caso não sejam enviados ou estejam
+            vazios, os valores anteriores serão mantidos.
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Atributo</th>
+                    <th>Tipo</th>
+                    <th>Obrigatório</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>nome</code></td>
+                    <td>String</td>
+                    <td>Não</td>
+                    <td>Novo nome da plataforma.</td>
+                </tr>
+                <tr>
+                    <td><code>descricao</code></td>
+                    <td>String</td>
+                    <td>Não</td>
+                    <td>Nova descrição da plataforma.</td>
+                </tr>
+                <tr>
+                    <td><code>foto</code></td>
+                    <td>Arquivo</td>
+                    <td>Não</td>
+                    <td>Nova imagem da plataforma.</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </section>
+
+
+
 
 </body>
+
 </html>

@@ -22,7 +22,7 @@ async function autenticaUsuario(req, res, next) {
             ]);
 
             if (!r.rowCount) {
-                return res.status(403).json({ msg: "Token inválido" });
+                return res.status(403).json({ msg: "Usuário não encontrado." });
             }
 
             req.usuario = decoded.id_usuario;

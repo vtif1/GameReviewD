@@ -76,7 +76,7 @@ router.get("/:id", verificaId, async (req, res) => {
         const desenvolvedor = r.rows[0];
 
         const jogos = await db.query(
-            `SELECT j.nome FROM jogo j 
+            `SELECT j.nome, j.id_imagem FROM jogo j 
             JOIN jogo_desenvolvedora jd ON j.id_jogo = jd.id_jogo 
             JOIN desenvolvedora d ON jd.id_desenvolvedora = d.id_desenvolvedora
             WHERE jd.id_desenvolvedora = $1`,
