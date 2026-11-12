@@ -24,7 +24,6 @@ As funcionalidades e as permissões são divididas entre usuários comuns e admi
 ### Usuário comum 👤
 - Consultar o catálogo de jogos;
 - Avaliar jogos com notas de 1 a 5 estrelas e comentários;
-- Consultar o histórico de alterações das próprias avaliações;
 - Organizar jogos em uma coleção pessoal;
 - Adicionar jogos aos favoritos;
 - Visualizar e acompanhar outros usuários, além de conseguir segui-los;
