@@ -71,20 +71,12 @@ router.get("/me", autenticaUsuario, async (req, res) => {
 
     try {
 
-        const existe = await db.query("SELECT * FROM usuario WHERE id_usuario = $1", [logado]);
+        const existe = await db.query("SELECT nome, username, data_nasc, bio, id_imagem_perfil FROM usuario WHERE id_usuario = $1", [logado]);
         if (!existe.rowCount) {
             return res.status(404).json({ msg: "Usuário não cadastrado." });
         }
 
-        const usuario = {
-            nome: existe.rows[0].nome,
-            username: existe.rows[0].username,
-            data_nasc: existe.rows[0].data_nasc,
-            bio: existe.rows[0].bio,
-            id_imagem_perfil: existe.rows[0].id_imagem_perfil
-        }
-
-        return res.status(200).json(usuario)
+        return res.status(200).json(existe.rows[0]);
 
     } catch (error) {
         return res.status(500).json({ msg: "Erro geral." })
