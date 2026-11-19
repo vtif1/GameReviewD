@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 
 function Cadastro(props) {
 
@@ -7,8 +7,8 @@ function Cadastro(props) {
     const [data_nascimento, setDataNascimento] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-    const [imagemPerfil, setImagemPerfil] = useState("");
-    const [bio, setBio] = useState("");
+    const [imagemPerfil, setImagemPerfil] = useState(null);
+    const [bio, setBio] = useState(null);
 
     function enviaFomulario(e) {
         e.preventDefault();
@@ -35,68 +35,66 @@ function Cadastro(props) {
 
             <div>
 
-                <form onSubmit={enviaFomulario} method="POST" action="">
+                <form onSubmit={enviaFomulario} action="">
 
-                    <input 
-                        type="text" 
-                        name="username" 
-                        placeholder="Username" 
-                        onChange={(e) => setUsername(e.target.value)} 
-                        required 
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
                     />
 
-                    <input 
-                        type="text" 
-                        name= "nome" 
-                        placeholder="Nome completo" 
-                        onChange={(e) => setNome(e.target.value)} 
-                        required 
+                    <input
+                        type="text"
+                        name="nome"
+                        placeholder="Nome completo"
+                        onChange={(e) => setNome(e.target.value)}
+                        required
                     />
 
-                    <input 
-                        type="date" 
-                        name="data de nascimento" 
-                        placeholder="Data de nascimento" 
-                        onChange={(e) => setDataNascimento(e.target.value)} 
-                        required 
+                    <input
+                        type="date"
+                        name="data de nascimento"
+                        placeholder="Data de nascimento"
+                        onChange={(e) => setDataNascimento(e.target.value)}
+                        required
                     />
 
-                    <input 
-                        type="text" 
-                        name="email" 
-                        placeholder="E-mail" 
-                        onChange={(e) => setEmail(e.target.value)} 
-                        required 
+                    <input
+                        type="text"
+                        name="email"
+                        placeholder="E-mail"
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
 
-                    <input 
-                        type="text" 
-                        name="senha" 
-                        placeholder="Senha" 
-                        onChange={(e) => setSenha(e.target.value)} 
-                        required 
+                    <input
+                        type="text"
+                        name="senha"
+                        placeholder="Senha"
+                        onChange={(e) => setSenha(e.target.value)}
+                        required
                     />
 
-                    <input 
-                        type="text" 
-                        name="bio" 
-                        placeholder="Biografia" 
-                        onChange={(e) => setBio(e.target.value)} 
-                        required 
+                    <input
+                        type="text"
+                        name="bio"
+                        placeholder="Biografia"
+                        onChange={(e) => setBio(e.target.value)}
                     />
 
-                    <input 
-                        type="file" 
-                        name="foto de perfil" 
+                    <input
+                        type="file"
+                        name="foto de perfil"
                         placeholder="Foto de perfil"
-                        accept="image/*" 
-                        onChange={(e) => setImagemPerfil(e.target.value)} 
-                        required 
+                        accept="image/*"
+                        onChange={(e) => setImagemPerfil(e.target.value)}
                     />
 
+                    <button>Cadastrar</button>
                 </form>
 
-                <button>Cadastrar</button>
 
             </div>
 

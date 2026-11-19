@@ -1,14 +1,43 @@
-import { useState } from 'react'
 import './App.css'
-import { Route, Routes, useNavigate } from "react-router-dom"
+import { Route, Routes } from "react-router-dom"
 import Principal from './pages/principal/Principal'
 import Cadastro from './pages/cadastro/Cadastro';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 function App() {
-  const [jogos, setJogos] = useState([]);
+  const [usuarios, setUsuarios] = useState({});
+  const [jogos, setJogos] = useState({});
+
+  async function carregaUsuarios() {
+    
+    try {
+      
+      const res = await fetch("http://localhost:3000/usuario");
+
+      if (!res.ok) {
+        return;
+      }
+
+      const usuariosJson = await res.json();
+
+      let dicUsuarios = {};
+      for (const usuario of usuariosJson) {
+        dicUsuarios[usuario.id_usuario] = usuario;
+      }
+
+      setUsuarios(dicUsuarios);
+
+      console.log(dicUsuarios);
+
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
 
   async function carregaJogos() {
-
+  
     try {
       const res = await fetch("http://localhost:3000/jogo");
 
@@ -25,8 +54,10 @@ function App() {
 
       setJogos(dicJogos);
 
+      console.log(dicJogos);
+
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
 
@@ -49,24 +80,27 @@ function App() {
         throw new Error(erro.message);
       }
 
+      console.log("Oii");
 
-
+      carregaUsuarios();
 
     } catch (error) {
       console.log(error);
     }
   }
 
+  useEffect(() => {
+    carregaJogos();
+    carregaUsuarios();
+  }, [])
+
   return (
     <>
       <Routes>
 
         <Route path='/' element={
-          <Principal
-            listaJogos={jogos}
-
-          />}
-        />
+          <Principal jogos={jogos} usuarios={usuarios}></Principal>
+        }></Route>
 
         <Route path='/cadastro' element={
           <Cadastro addUsuario={cadastraUsuario} />
