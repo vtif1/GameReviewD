@@ -9,24 +9,32 @@ function Cadastro(props) {
     const [senha, setSenha] = useState("");
     const [imagemPerfil, setImagemPerfil] = useState(null);
     const [bio, setBio] = useState(null);
-
+    
+    
     function enviaFomulario(e) {
         e.preventDefault();
+        
+        const dadosUsuario = new FormData();
+        dadosUsuario.append("username", username);
+        dadosUsuario.append("nome", nome);
+        dadosUsuario.append("data_nasc", data_nascimento);
+        dadosUsuario.append("email", email);
+        dadosUsuario.append("senha", senha);
 
-        const dadosUsuario = {
-            username: username,
-            nome: nome,
-            data_nascimento: data_nascimento,
-            email: email,
-            senha: senha,
-            imagemPerfil: imagemPerfil,
-            bio: bio
+        if (bio) {
+            dadosUsuario.append("bio", bio);
+        }
+
+        if (imagemPerfil) {
+            dadosUsuario.append("foto", imagemPerfil);
         }
 
         props.addUsuario(dadosUsuario);
+
+        e.currentTarget.reset();
     }
 
-
+    
     return (
         <>
 
@@ -89,10 +97,11 @@ function Cadastro(props) {
                         name="foto de perfil"
                         placeholder="Foto de perfil"
                         accept="image/*"
-                        onChange={(e) => setImagemPerfil(e.target.value)}
+                        onChange={(e) => setImagemPerfil(e.target.files[0])}
                     />
 
                     <button>Cadastrar</button>
+                    <button type="reset">Resetar</button>
                 </form>
 
 

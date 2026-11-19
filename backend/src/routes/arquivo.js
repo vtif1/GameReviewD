@@ -4,8 +4,17 @@ const db = require("../db");
 const path = require("path");
 const fs = require("fs");
 
-// Retorna a imagem de algum elemento específico
 
+router.get("/", async (req, res) => {
+    try {
+        const r = await db.query("SELECT * FROM arquivo ORDER BY data_upload");
+        res.json(r.rows);
+    } catch (err) {
+        return res.status(500).json({ msg: err.message });
+    }
+});
+
+// Retorna a imagem de algum elemento específico
 router.get("/:id", async (req, res) => {
     try {
         const r = await db.query("SELECT * FROM arquivo WHERE id = $1", [req.params.id]);

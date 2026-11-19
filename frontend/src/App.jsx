@@ -4,10 +4,12 @@ import Principal from './pages/principal/Principal'
 import Cadastro from './pages/cadastro/Cadastro';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import Login from './pages/login/Login';
 
 function App() {
   const [usuarios, setUsuarios] = useState({});
   const [jogos, setJogos] = useState({});
+  const [imgJogos, setImgJogos] = useState({});
 
   async function carregaUsuarios() {
     
@@ -67,8 +69,7 @@ function App() {
 
     let option = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(usuario)
+      body: usuario
     }
 
     try {
@@ -77,10 +78,8 @@ function App() {
 
       if (!cadastro.ok) {
         const erro = await cadastro.json();
-        throw new Error(erro.message);
+        throw new Error(erro.msg);
       }
-
-      console.log("Oii");
 
       carregaUsuarios();
 
@@ -89,9 +88,57 @@ function App() {
     }
   }
 
+  async function loginUsuario(usuario) {
+
+    let option = {
+      method: "POST",
+      headers: {'Content-Type' : "application/json"},
+      body: JSON.stringify(usuario)
+    }
+
+    try {
+
+      let login = await fetch("http://localhost:3000/usuario/login", option);
+      let dadosUsuario = await login.json();
+
+      if (!login.ok) {
+        const erro = await login.json();
+        throw new Error(erro.msg)
+      }
+
+      console.log(dadosUsuario);
+      
+    } catch (error) {
+      alert(error.message);
+    }
+    
+  }
+
+  async function carregaImagensJogos() {
+
+    try {
+
+      const res = await fetch(`http://localhost:3000/arquivo`);
+
+      if (!res.ok) {
+        return;
+      }
+      
+      const imagensJson = await res.json();
+      setImgJogos(imagensJson);
+
+      console.log(imagensJson)
+      
+    } catch (error) {
+      console.log(error.message);
+    }
+
+  }
+
   useEffect(() => {
     carregaJogos();
     carregaUsuarios();
+    carregaImagensJogos();
   }, [])
 
   return (
@@ -99,12 +146,16 @@ function App() {
       <Routes>
 
         <Route path='/' element={
-          <Principal jogos={jogos} usuarios={usuarios}></Principal>
+          <Principal jogos={jogos} usuarios={usuarios} fotosJogos={imgJogos}></Principal>
         }></Route>
 
         <Route path='/cadastro' element={
           <Cadastro addUsuario={cadastraUsuario} />
         } />
+
+        <Route path='/login' element={
+          <Login loginUsuario={loginUsuario} />
+        }/>
 
       </Routes>
     </>

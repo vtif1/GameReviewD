@@ -13,6 +13,7 @@ app.use("/jogo", require("./routes/jogo"));
 app.use("/plataforma", require("./routes/plataforma"));
 app.use("/genero", require("./routes/genero"));
 app.use("/desenvolvedora", require("./routes/desenvolvedor"));
+app.use("/arquivo", require("./routes/arquivo"));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "static", "index.html"));
