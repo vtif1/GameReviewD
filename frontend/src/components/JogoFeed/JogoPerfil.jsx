@@ -5,6 +5,7 @@ const url = "http://localhost:3000/arquivo";
 
 function JogoPerfil(props) {
     const jogo = props.jogo;
+    console.log("Jogo: ", jogo)
 
     const imagem = jogo.id_imagem ? `${url}/${jogo.id_imagem}` : semFoto;
 
@@ -19,16 +20,27 @@ function JogoPerfil(props) {
                 />
             </div>
 
-            <div className="card-body p-3">
-                <h5 className="card-title fs-6 fw-bold mb-1 text-truncate" title={jogo.jogo}>
-                    {jogo.jogo}
-                </h5>
+            <div className="container card-body p-3">
+                <div className="row">
 
+                    <div className="col-lg-5">
 
-                <p className="card-text small text-body-secondary mb-0">
-                    {new Date(jogo.data_lancamento).getFullYear()}
-                </p>
+                        <h5 className="card-title fs-6 fw-bold mb-1 text-truncate" title={jogo.jogo}>
+                            {jogo.jogo}
+                        </h5>
 
+                        <p className="card-text small text-body-secondary mb-0">
+                            {new Date(jogo.data_lancamento).getFullYear()}
+                        </p>
+
+                    </div>
+
+                    <div className="d-flex col-lg-7 gap-1 justify-content-end align-items-center ">
+                        <button onClick={() => props.fav_desfavJogo(jogo.id_jogo, !jogo.favorito)} className={styles.btn_funcao}><i className={!jogo.favorito ? "bi bi-star" : "bi bi-star-fill"}></i></button>
+                        <button className={styles.btn_funcao}><i className="bi bi-trash3"></i></button>
+                    </div>
+
+                </div>
             </div>
 
         </article>

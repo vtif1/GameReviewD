@@ -36,6 +36,7 @@ function Perfil(props) {
     }
 
     const jogosColecao = colecao ?? [];
+    console.log("Jogos ai: ", jogosColecao)
 
     const fotoPerfil = perfil.id_imagem_perfil ? `${url}/arquivo/${perfil.id_imagem_perfil}` : semfoto;
 
@@ -196,8 +197,9 @@ function Perfil(props) {
                             <div className="row g-3">
                                 {jogosColecao.map((jogo) => (
                                     <div className="col-12 col-sm-6 col-lg-4" key={jogo.id_jogo}>
-                                        <JogoPerfil jogo={jogo} />
+                                        <JogoPerfil jogo={jogo} fav_desfavJogo={props.fav_desfavJogo}/>
                                     </div>
+
                                 ))}
                             </div>
                         )

@@ -255,7 +255,7 @@ function App() {
 
       const colecao = await res.json();
       setColecaoUsuario(colecao);
-      console.log(colecao);
+      console.log("Colecao: ", colecao);
 
     } catch (error) {
       console.log(error.message)
@@ -340,6 +340,37 @@ function App() {
 
   }
 
+  async function fav_desfavJogo(idJogo, fav) {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    let option = {
+      method: "PATCH",
+      headers: {
+        "Content-Type" : "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({favoritar : fav})
+    }
+
+    try {
+
+      const res = await fetch(`${url}/usuario/me/colecao/${idJogo}/favorito`, option);
+
+      if (!res.ok) {
+        const erro = await res.json();
+        throw new Error(erro.msg);
+      }
+
+      await carregaFavoritos();
+      await carregaColecaoLogado();
+
+    } catch (error) {
+      console.log(error.message);
+    }
+
+  }
+
   /*
   async function favoritaJogo() {
     const token = localStorage.getItem("token");
@@ -399,6 +430,7 @@ function App() {
             admin={admin}
             deixaSeguir={deixaSeguir}
             carregaSeguindo={carregaSeguindo}
+            fav_desfavJogo={fav_desfavJogo}
           />
         } />
 

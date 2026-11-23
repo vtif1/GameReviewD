@@ -747,7 +747,7 @@ router.get("/me/colecao", autenticaUsuario, async (req, res) => {
     try {
 
         const colecao = await db.query(
-            `SELECT u.username, j.nome, j.descricao, j.data_lancamento FROM usuario u
+            `SELECT u.username, j.id_jogo, j.nome, j.descricao, j.data_lancamento, cju.favorito FROM usuario u
             LEFT JOIN colecao_jogo_usuario cju ON u.id_usuario = cju.id_usuario
             LEFT JOIN jogo j ON j.id_jogo = cju.id_jogo
             WHERE u.id_usuario = $1`,
@@ -764,9 +764,11 @@ router.get("/me/colecao", autenticaUsuario, async (req, res) => {
             if (jogo.nome != null) {
                 colecaoUsuario.jogos.push(
                     {
+                        id_jogo: jogo.id_jogo,
                         jogo: jogo.nome,
                         descricao: jogo.descricao,
-                        data_lancamento: jogo.data_lancamento
+                        data_lancamento: jogo.data_lancamento,
+                        favorito: jogo.favorito
                     }
                 )
             }
@@ -790,7 +792,7 @@ router.get("/me/colecao/favoritos", autenticaUsuario, async (req, res) => {
     try {
 
         const colecao = await db.query(
-            `SELECT u.username, j.nome, j.descricao, j.id_imagem FROM usuario u
+            `SELECT u.username, j.nome, j.descricao, j.id_imagem, cju.favorito FROM usuario u
             LEFT JOIN colecao_jogo_usuario cju ON u.id_usuario = cju.id_usuario
             LEFT JOIN jogo j ON j.id_jogo = cju.id_jogo AND cju.favorito = TRUE
             WHERE u.id_usuario = $1`,
@@ -809,7 +811,8 @@ router.get("/me/colecao/favoritos", autenticaUsuario, async (req, res) => {
                     {
                         jogo: jogo.nome,
                         descricao: jogo.descricao,
-                        imagem: jogo.id_imagem
+                        imagem: jogo.id_imagem,
+                        favorito: jogo.favorito
                     }
                 )
             }
@@ -857,7 +860,7 @@ router.patch("/me/colecao/:id/favorito", autenticaUsuario, verificaId, async (re
             return res.status(400).json({ msg: "Erro ao favoritar/desfavoritar jogo." });
         }
 
-        return res.status(200).json({ msg: "Jogo favoritado/desfavoritado." });
+        return res.status(200).json({ msg: "Jogo favoritado/desfavoritado.", favoritado: atualizaFavorito.rows[0].favorito });
 
     } catch (error) {
         return res.status(500).json({ msg: "Erro geral." });

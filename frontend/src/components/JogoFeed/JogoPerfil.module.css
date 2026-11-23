@@ -16,3 +16,11 @@
 .jogo_perfil:hover .jogo-perfil_capa img {
     transform: scale(1.06);
 }
+
+.btn_funcao {
+    border: none;
+    border-radius: 5px;
+    padding: 2px;
+    padding-left: 7px;
+    padding-right: 7px;
+}
