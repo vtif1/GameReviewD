@@ -41,7 +41,24 @@ Antes de iniciar o projeto, veja se sua máquina possui:
 - Docker
 
 ## Backend ⚙️
-No terminal, abra a pasta do backend e execute o seguinte comando:
+Antes da execução dos comandos abaixo, na pasta raiz do projeto crie um arquivo ".env" com as seguintes informações:
+
+JWT_SECRET=
+PORT=3000
+DB_HOST=database
+DB_USER=usuario
+DB_PASS=senha
+DB_NAME=bancodados
+DB_PORT=5432
+PGWEB_PORT=8081
+
+O JWT_SECRET no arquivo é uma chave secreta usada pelo servidor para assinar e validar os tokens JWT. Ele irá garantir que o token foi gerado pela sua aplicação e que ninguém alterou os dados dele no caminho.
+Como parâmetro para ele, utilize algum valor de sua preferência. 
+Mas se preferir uma chave mais criptografada, execute o seguinte comando no terminal: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+
+Após isso, acrescente o valor ao lado dele, sem utilizar aspas.
+
+Agora, no terminal, abra a pasta do backend e execute o seguinte comando:
 
 ```bash
 docker compose up --build -d
