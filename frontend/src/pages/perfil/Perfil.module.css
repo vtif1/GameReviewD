@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Pliant:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Comfortaa:wght@300..700&family=Pliant:ital,wght@0,100..900;1,100..900&display=swap');
+
+.fonte_bebas_neue {
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+.fonte_comfortaa {
+    font-family: 'Comfortaa', sans-serif;
+}
+
+.fundo_pagina {
+    background: linear-gradient(black, rgb(0, 0, 179));
+}
+
+.bloco_info {
+    background-color: rgb(0, 0, 39);
+    box-shadow: 1px 1px 10px rgb(138, 245, 255);
+    border-radius: 20px
+}
+
+.seguidor_exibicao,
+.seguindo_exibicao {
+    background-color: rgb(0, 0, 39);
+    box-shadow: 1px 1px 10px rgb(138, 245, 255);
+    border-radius: 10px
+}
+
+.seguidores,
+.seguindo {
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+}
+
+.seguidores:hover,
+.seguindo:hover {
+    text-decoration: underline;
+}
+
+.nav {
+    background: black;
+    font-family: 'Comfortaa', sans-serif;
+    padding: 5px;
+}
+
+.nav_item {
+    transition: transform 0.3s ease
+}
+
+.nav_item:hover {
+    transform: scale(1.05)
+}
+
+.btn_aba {
+    transition: background-color 0.4s ease;
+}
+
+.btn_aba:hover {
+    background-color: rgb(173, 186, 255, 0.5);
+}

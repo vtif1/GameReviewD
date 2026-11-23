@@ -71,12 +71,8 @@ router.get("/me", autenticaUsuario, async (req, res) => {
 
     try {
 
-        const existe = await db.query("SELECT nome, username, data_nasc, bio, id_imagem_perfil FROM usuario WHERE id_usuario = $1", [logado]);
-        if (!existe.rowCount) {
-            return res.status(404).json({ msg: "Usuário não cadastrado." });
-        }
-
-        return res.status(200).json(existe.rows[0]);
+        const usuario = await db.query("SELECT nome, username, data_nasc, bio, id_imagem_perfil FROM usuario WHERE id_usuario = $1", [logado]);
+        return res.status(200).json(usuario.rows[0]);
 
     } catch (error) {
         return res.status(500).json({ msg: "Erro geral." })
@@ -688,7 +684,7 @@ router.get("/me/avaliacoes", autenticaUsuario, async (req, res) => {
         return res.status(200).json(avaliacoesUsuario);
 
     } catch (error) {
-        return res.status(500).json({ msg : error.message})
+        return res.status(500).json({ msg: error.message })
     }
 
 });
@@ -751,7 +747,7 @@ router.get("/me/colecao", autenticaUsuario, async (req, res) => {
     try {
 
         const colecao = await db.query(
-            `SELECT u.username, j.nome, j.descricao FROM usuario u
+            `SELECT u.username, j.nome, j.descricao, j.data_lancamento FROM usuario u
             LEFT JOIN colecao_jogo_usuario cju ON u.id_usuario = cju.id_usuario
             LEFT JOIN jogo j ON j.id_jogo = cju.id_jogo
             WHERE u.id_usuario = $1`,
@@ -769,7 +765,8 @@ router.get("/me/colecao", autenticaUsuario, async (req, res) => {
                 colecaoUsuario.jogos.push(
                     {
                         jogo: jogo.nome,
-                        descricao: jogo.descricao
+                        descricao: jogo.descricao,
+                        data_lancamento: jogo.data_lancamento
                     }
                 )
             }
@@ -849,7 +846,7 @@ router.patch("/me/colecao/:id/favorito", autenticaUsuario, verificaId, async (re
         }
 
         if (typeof favoritar !== 'boolean') {
-            return res.status(400).json({ msg : "Parâmetro inválido."});
+            return res.status(400).json({ msg: "Parâmetro inválido." });
         }
 
         const atualizaFavorito = await db.query(
@@ -1039,6 +1036,65 @@ router.delete("/me/colecao/:id", autenticaUsuario, verificaId, async (req, res) 
     }
 });
 
+// Retorna os próprios seguidores
+
+router.get("/me/seguidores", autenticaUsuario, async (req, res) => {
+
+    const logado = req.usuario;
+
+    try {
+
+        const seguidores = [];
+
+        const seg = await db.query(
+            `SELECT u2.id_usuario, u2.username seguidor, u2.id_imagem_perfil FROM usuario u1 
+            JOIN seguidores s ON u1.id_usuario = s.id_seguido
+            JOIN usuario u2 ON s.id_seguidor = u2.id_usuario
+            WHERE u1.id_usuario = $1`,
+            [logado]
+        );
+
+        for (const seguidor of seg.rows) {
+            seguidores.push(seguidor);
+        }
+
+        return res.status(200).json(seguidores);
+
+    } catch (error) {
+        return res.status(500).json({ msg: error.message });
+    }
+});
+
+// Retorna as pessoas que está seguindo
+
+router.get("/me/seguindo", autenticaUsuario, async (req, res) => {
+
+    const logado = req.usuario;
+
+    try {
+
+        const seguindo = [];
+
+        const seg = await db.query(
+            `SELECT u2.id_usuario, u2.username seguido, u2.id_imagem_perfil FROM usuario u1
+            JOIN seguidores s ON u1.id_usuario = s.id_seguidor
+            JOIN usuario u2 ON s.id_seguido = u2.id_usuario
+            WHERE u1.id_usuario = $1`,
+            [logado]
+        );
+
+        for (const s of seg.rows) {
+            seguindo.push(s);
+        }
+
+        return res.status(200).json(seguindo);
+
+    } catch (error) {
+        return res.status(500).json({ msg: error.message });
+    }
+});
+
+
 
 // Busca os seguidores de um usuário
 
@@ -1125,7 +1181,7 @@ router.post("/me/seguindo/:id", autenticaUsuario, verificaId, async (req, res) =
     try {
 
         if (idUsuarioSeguir == logado) {
-            return res.status(400).json({ msg : "Você não pode seguir a si mesmo."})
+            return res.status(400).json({ msg: "Você não pode seguir a si mesmo." })
         }
 
         const verificaUsuario = await db.query("SELECT * FROM usuario WHERE id_usuario = $1", [idUsuarioSeguir]);

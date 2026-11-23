@@ -1,0 +1,18 @@
+.jogo_perfil {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+}
+
+.jogo_perfil:hover {
+    transform: translateY(-4px);
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 10px 25px rgba(124, 77, 255, 0.3);
+}
+
+.jogo_perfil-capa img {
+    transition: transform 0.3s ease;
+}
+
+.jogo_perfil:hover .jogo-perfil_capa img {
+    transform: scale(1.06);
+}

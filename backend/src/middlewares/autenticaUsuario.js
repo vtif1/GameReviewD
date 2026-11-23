@@ -3,38 +3,29 @@ const jwt = require("jsonwebtoken");
 const senhaSecreta = process.env.JWT_SECRET;
 
 async function autenticaUsuario(req, res, next) {
-
-    const token = req.headers["authorization"]?.split(" ")[1];
+    const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-        return res.status(403).json({ msg: "Token inválido." });
+        return res.status(401).json({ msg: "Token não informado." });
     }
 
     try {
+        const decoded = jwt.verify(token, senhaSecreta);
 
-        jwt.verify(token, senhaSecreta, async (err, decoded) => {
-            if (err) {
-                return res.status(403).json({ msg: "Token inválido" });
-            }
+        const r = await db.query(
+            "SELECT id_usuario FROM usuario WHERE id_usuario = $1",
+            [decoded.id_usuario]
+        );
 
-            const r = await db.query("SELECT id_usuario FROM usuario WHERE id_usuario = $1", [
-                decoded.id_usuario,
-            ]);
+        if (!r.rowCount) {
+            return res.status(401).json({ msg: "Usuário não encontrado." });
+        }
 
-            if (!r.rowCount) {
-                return res.status(403).json({ msg: "Usuário não encontrado." });
-            }
-
-            req.usuario = decoded.id_usuario;
-            next();
-        })
-
+        req.usuario = decoded.id_usuario;
+        next();
     } catch (error) {
-        return res.status(500).json({ msg : "Erro."})
+        return res.status(500).json({ msg: "Erro interno." });
     }
-
-
-
 }
 
 module.exports = autenticaUsuario;
