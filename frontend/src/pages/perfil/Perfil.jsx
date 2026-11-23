@@ -1,6 +1,7 @@
 import { useState } from "react";
 import JogoFeed from "../../components/JogoFeed/JogoFeed";
 import semfoto from "../../../src/assets/imagens/semfoto.png";
+import jogoSemFoto from "../../assets/imagens/neon-video-game-controller-line-260nw-2663195189.jpg"
 import logotipo from "../../assets/imagens/Neon Five-Star Gaming Controller Emblem.png"
 
 import styles from "./Perfil.module.css";
@@ -20,6 +21,9 @@ function Perfil(props) {
     const colecao = props.colecaoJogos.jogos;
     const avaliacoes = props.avaliacoes.avaliacoes ?? [];
     const favoritos = props.favoritos.favoritos ?? [];
+
+    console.log("Favoritos: ", favoritos)
+    console.log("Avaliações: ", avaliacoes)
 
     const isAdmin = props.admin;
 
@@ -197,7 +201,10 @@ function Perfil(props) {
                             <div className="row g-3">
                                 {jogosColecao.map((jogo) => (
                                     <div className="col-12 col-sm-6 col-lg-4" key={jogo.id_jogo}>
-                                        <JogoPerfil jogo={jogo} fav_desfavJogo={props.fav_desfavJogo}/>
+                                        <JogoPerfil
+                                            jogo={jogo}
+                                            fav_desfavJogo={props.fav_desfavJogo}
+                                            apagaJogoColecao={props.apagaJogoColecao} />
                                     </div>
 
                                 ))}
@@ -214,7 +221,10 @@ function Perfil(props) {
                             <div className="row g-3">
                                 {favoritos.map((jogo) => (
                                     <div className="col-12 col-sm-6 col-lg-4" key={jogo.id_jogo}>
-                                        <JogoPerfil jogo={jogo} />
+                                        <JogoPerfil
+                                            jogo={jogo}
+                                            fav_desfavJogo={props.fav_desfavJogo}
+                                            apagaJogoColecao={props.apagaJogoColecao} />
                                     </div>
                                 ))}
                             </div>
@@ -231,16 +241,60 @@ function Perfil(props) {
 
                                 {avaliacoes.map((av) => (
                                     <li className="list-group-item" key={av.id_avaliacao}>
+                                        <div className="container">
+                                            <div className="row">
 
-                                        <div className="d-flex justify-content-between align-items-start">
-                                            <strong>{av.jogo}</strong>
-                                            <span className="badge text-bg-warning">★ {av.estrelas}</span>
+                                                <div className="col-lg-4">
+                                                    <img
+                                                        src={av.id_imagem ? `${url}/arquivo/${av.id_imagem}` : jogoSemFoto}
+                                                        alt=""
+                                                        className="img-fluid rounded"
+                                                    />
+                                                </div>
+
+                                                <div className="col-lg-8">
+
+                                                    <div className="d-flex justify-content-between align-items-start">
+                                                        <div>
+                                                            <strong>{av.jogo}</strong>
+                                                            <span className="badge text-bg-warning ms-3">★ {av.estrelas}</span>
+                                                        </div>
+
+                                                        <div className="text-end text-nowrap ms-2">
+                                                            <small className="d-block text-body-secondary">
+                                                                Criada em {new Date(av.data_criacao).toLocaleDateString("pt-BR")}
+                                                            </small>
+                                                            <small className="d-block text-body-secondary">
+                                                                Editada em {new Date(av.data_edicao).toLocaleDateString("pt-BR")}
+                                                            </small>
+                                                        </div>
+                                                    </div>
+
+                                                    {av.texto && (
+                                                        <p className="mb-0 mt-2 text-body-secondary">{av.texto}</p>
+                                                    )}
+
+                                                    <textarea name="editar" className="mt-4 w-100" />
+
+                                                    <div className="d-flex justify-content-end gap-3">
+
+                                                        <select name="" id="">
+                                                            <option value="1">1</option>
+                                                            <option value="2">2</option>
+                                                            <option value="3">3</option>
+                                                            <option value="4">4</option>
+                                                            <option value="5">5</option>
+                                                        </select>
+
+                                                        <span><i className="bi bi-star-fill"></i></span>
+
+
+                                                        <button>Editar</button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
                                         </div>
-
-                                        {av.texto && (
-                                            <p className="mb-0 mt-2 text-body-secondary">{av.texto}</p>
-                                        )}
-
                                     </li>
                                 ))}
 
@@ -267,7 +321,7 @@ function Perfil(props) {
                                                     <strong className="text-white ms-2">{seg.seguidor}</strong>
                                                 </div>
 
-                                                
+
                                             </div>
                                         </div>
 
@@ -300,7 +354,7 @@ function Perfil(props) {
 
 
                                                 <div className="col-md-9 d-flex justify-content-end align-items-center">
-                                                    <button onClick={() => {props.deixaSeguir(seg.id_usuario)}}>Seguindo</button>
+                                                    <button onClick={() => { props.deixaSeguir(seg.id_usuario) }}>Seguindo</button>
                                                 </div>
                                             </div>
                                         </div>

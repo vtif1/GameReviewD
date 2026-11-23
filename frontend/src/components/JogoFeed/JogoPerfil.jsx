@@ -12,7 +12,7 @@ function JogoPerfil(props) {
     return (
         <article className={`card jogo-perfil h-100 border-secondary-subtle overflow-hidden ${styles.jogo_perfil}`}>
 
-            <div className={`ratio ratio-4x3 ${styles.jogo_perfil_capa}`}>
+            <div className={`${styles.jogo_perfil_capa}`}>
                 <img
                     src={imagem}
                     alt={`Capa de ${jogo.jogo}`}
@@ -36,8 +36,8 @@ function JogoPerfil(props) {
                     </div>
 
                     <div className="d-flex col-lg-7 gap-1 justify-content-end align-items-center ">
-                        <button onClick={() => props.fav_desfavJogo(jogo.id_jogo, !jogo.favorito)} className={styles.btn_funcao}><i className={!jogo.favorito ? "bi bi-star" : "bi bi-star-fill"}></i></button>
-                        <button className={styles.btn_funcao}><i className="bi bi-trash3"></i></button>
+                        <button onClick={() => props.fav_desfavJogo(jogo.id_jogo, !jogo.favorito)} className={`bg-warning ${styles.btn_funcao}`}><i className={!jogo.favorito ? "bi bi-star" : "bi bi-star-fill"}></i></button>
+                        <button onClick={() => props.apagaJogoColecao(jogo.id_jogo)} className={`bg-danger ${styles.btn_funcao}`}><i className="bi bi-trash3"></i></button>
                     </div>
 
                 </div>

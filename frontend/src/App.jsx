@@ -371,6 +371,36 @@ function App() {
 
   }
 
+  async function apagaJogoColecao(idJogo) {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    let option = {
+      method: "DELETE",
+      headers: {
+        "Content-Type" : "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    }
+
+    try {
+
+      const res = await fetch(`${url}/usuario/me/colecao/${idJogo}`, option);
+
+      if (!res.ok) {
+        const erro = await res.json();
+        throw new Error(erro.msg);
+      }
+
+      await carregaColecaoLogado();
+      await carregaFavoritos();
+      
+    } catch (error) {
+      console.log(error.message)
+    }
+    
+  }
+
   /*
   async function favoritaJogo() {
     const token = localStorage.getItem("token");
@@ -431,6 +461,7 @@ function App() {
             deixaSeguir={deixaSeguir}
             carregaSeguindo={carregaSeguindo}
             fav_desfavJogo={fav_desfavJogo}
+            apagaJogoColecao={apagaJogoColecao}
           />
         } />
 

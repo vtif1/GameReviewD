@@ -656,7 +656,7 @@ router.get("/me/avaliacoes", autenticaUsuario, async (req, res) => {
     try {
 
         const a = await db.query(
-            "SELECT j.nome jogo, j.id_imagem, a.texto, a.estrelas, a.criado_em FROM avaliacao a JOIN jogo j ON a.id_jogo = j.id_jogo WHERE id_usuario = $1",
+            "SELECT j.nome jogo, j.id_imagem, a.texto, a.estrelas, a.criado_em, a.atualizado_em FROM avaliacao a JOIN jogo j ON a.id_jogo = j.id_jogo WHERE id_usuario = $1",
             [logado]);
 
         if (!a.rowCount) {
@@ -674,9 +674,11 @@ router.get("/me/avaliacoes", autenticaUsuario, async (req, res) => {
             avaliacoesUsuario.avaliacoes.push(
                 {
                     jogo: avaliacao.jogo,
+                    id_imagem: avaliacao.id_imagem,
                     texto: avaliacao.texto,
                     estrelas: avaliacao.estrelas,
-                    data_criacao: avaliacao.criado_em
+                    data_criacao: avaliacao.criado_em,
+                    data_edicao: avaliacao.atualizado_em
                 }
             )
         }
@@ -792,7 +794,7 @@ router.get("/me/colecao/favoritos", autenticaUsuario, async (req, res) => {
     try {
 
         const colecao = await db.query(
-            `SELECT u.username, j.nome, j.descricao, j.id_imagem, cju.favorito FROM usuario u
+            `SELECT u.username, j.id_jogo, j.nome, j.descricao, j.data_lancamento, j.id_imagem, cju.favorito FROM usuario u
             LEFT JOIN colecao_jogo_usuario cju ON u.id_usuario = cju.id_usuario
             LEFT JOIN jogo j ON j.id_jogo = cju.id_jogo AND cju.favorito = TRUE
             WHERE u.id_usuario = $1`,
@@ -809,10 +811,12 @@ router.get("/me/colecao/favoritos", autenticaUsuario, async (req, res) => {
             if (jogo.nome != null) {
                 colecaoUsuario.favoritos.push(
                     {
+                        id_jogo: jogo.id_jogo,
                         jogo: jogo.nome,
                         descricao: jogo.descricao,
                         imagem: jogo.id_imagem,
-                        favorito: jogo.favorito
+                        favorito: jogo.favorito,
+                        data_lancamento: jogo.data_lancamento
                     }
                 )
             }
