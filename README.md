@@ -55,8 +55,11 @@ PGWEB_PORT=8081
 ```
 
 O JWT_SECRET no arquivo é uma chave secreta usada pelo servidor para assinar e validar os tokens JWT. Ele irá garantir que o token foi gerado pela sua aplicação e que ninguém alterou os dados dele no caminho.
+
 Como parâmetro para ele, utilize algum valor de sua preferência. 
-Mas se preferir uma chave mais criptografada, execute o seguinte comando no terminal: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+Mas se preferir uma chave mais criptografada, execute o seguinte comando no terminal: 
+
+`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
 
 Após isso, acrescente o valor ao lado do JWT_SECRET, sem utilizar aspas ou espaço.
 
