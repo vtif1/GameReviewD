@@ -347,10 +347,10 @@ function App() {
     let option = {
       method: "PATCH",
       headers: {
-        "Content-Type" : "application/json",
+        "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
       },
-      body: JSON.stringify({favoritar : fav})
+      body: JSON.stringify({ favoritar: fav })
     }
 
     try {
@@ -378,7 +378,7 @@ function App() {
     let option = {
       method: "DELETE",
       headers: {
-        "Content-Type" : "application/json",
+        "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
       }
     }
@@ -394,29 +394,101 @@ function App() {
 
       await carregaColecaoLogado();
       await carregaFavoritos();
-      
+
     } catch (error) {
       console.log(error.message)
     }
-    
+
   }
 
-  /*
-  async function favoritaJogo() {
+  async function editaAvaliacao(idJogo, texto, estrelas) {
     const token = localStorage.getItem("token");
     if (!token) return;
 
+    let option = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ texto: texto, estrelas: estrelas })
+    }
+
     try {
 
-      const res = await fetch(`${url}/usuario/me/colecao/favoritos`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await fetch(`${url}/jogo/${idJogo}/avaliacoes`, option);
+
+      if (!res.ok) {
+        const erro = await res.json();
+        throw new Error(erro.msg);
+      }
+
+      await carregaAvaliacoesLogado();
 
     } catch (error) {
-
+      alert(error.message);
     }
+
   }
-    */
+
+  async function apagaAvaliacao(idJogo) {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    let option = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    }
+
+    try {
+
+      const res = await fetch(`${url}/jogo/${idJogo}/avaliacoes`, option);
+
+      if (!res.ok) {
+        const erro = await res.json();
+        throw new Error(erro.msg);
+      }
+
+      await carregaAvaliacoesLogado();
+
+    } catch (error) {
+      alert(error.message);
+    }
+
+  }
+
+  async function alteraStatusJogo(idJogo, status) {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    let option = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ status: status })
+    }
+
+    try {
+
+      const res = await fetch(`${url}/usuario/me/colecao/${idJogo}`, option);
+
+      if (!res.ok) {
+        const erro = await res.json();
+        throw new Error(erro.msg);
+      }
+
+      await carregaColecaoLogado();
+
+    } catch (error) {
+      console.log(error.message)
+    }
+
+  }
 
   useEffect(() => {
     carregaJogos();
@@ -462,6 +534,9 @@ function App() {
             carregaSeguindo={carregaSeguindo}
             fav_desfavJogo={fav_desfavJogo}
             apagaJogoColecao={apagaJogoColecao}
+            editaAvaliacao={editaAvaliacao}
+            alteraStatusJogo={alteraStatusJogo}
+            apagaAvaliacao={apagaAvaliacao}
           />
         } />
 

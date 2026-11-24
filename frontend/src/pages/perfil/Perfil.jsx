@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import JogoFeed from "../../components/JogoFeed/JogoFeed";
 import semfoto from "../../../src/assets/imagens/semfoto.png";
 import jogoSemFoto from "../../assets/imagens/neon-video-game-controller-line-260nw-2663195189.jpg"
@@ -6,11 +6,15 @@ import logotipo from "../../assets/imagens/Neon Five-Star Gaming Controller Embl
 
 import styles from "./Perfil.module.css";
 import JogoPerfil from "../../components/JogoFeed/JogoPerfil";
+import ItemAvaliacao from "./ItemAvaliacao";
 
 const url = "http://localhost:3000";
 
 function Perfil(props) {
     const [aba, setAba] = useState("colecao");
+
+    const [estrelas, setEstrelas] = useState(0);
+    const [texto, setTexto] = useState("");
 
     const perfil = props.perfil;
     const seguidores = props.seguidores;
@@ -18,7 +22,7 @@ function Perfil(props) {
     console.log("Seguidores: ", seguidores);
     const seguindo = props.seguindo;
     console.log("Seguindo: ", seguindo)
-    const colecao = props.colecaoJogos.jogos;
+    const colecao = props.colecaoJogos.jogos ?? [];
     const avaliacoes = props.avaliacoes.avaliacoes ?? [];
     const favoritos = props.favoritos.favoritos ?? [];
 
@@ -203,8 +207,10 @@ function Perfil(props) {
                                     <div className="col-12 col-sm-6 col-lg-4" key={jogo.id_jogo}>
                                         <JogoPerfil
                                             jogo={jogo}
+                                            status_jogo={jogo.status}
                                             fav_desfavJogo={props.fav_desfavJogo}
-                                            apagaJogoColecao={props.apagaJogoColecao} />
+                                            apagaJogoColecao={props.apagaJogoColecao}
+                                            alteraStatusJogo={props.alteraStatusJogo} />
                                     </div>
 
                                 ))}
@@ -224,7 +230,8 @@ function Perfil(props) {
                                         <JogoPerfil
                                             jogo={jogo}
                                             fav_desfavJogo={props.fav_desfavJogo}
-                                            apagaJogoColecao={props.apagaJogoColecao} />
+                                            apagaJogoColecao={props.apagaJogoColecao}
+                                        />
                                     </div>
                                 ))}
                             </div>
@@ -241,6 +248,7 @@ function Perfil(props) {
 
                                 {avaliacoes.map((av) => (
                                     <li className="list-group-item" key={av.id_avaliacao}>
+
                                         <div className="container">
                                             <div className="row">
 
@@ -274,23 +282,12 @@ function Perfil(props) {
                                                         <p className="mb-0 mt-2 text-body-secondary">{av.texto}</p>
                                                     )}
 
-                                                    <textarea name="editar" className="mt-4 w-100" />
-
-                                                    <div className="d-flex justify-content-end gap-3">
-
-                                                        <select name="" id="">
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                            <option value="5">5</option>
-                                                        </select>
-
-                                                        <span><i className="bi bi-star-fill"></i></span>
-
-
-                                                        <button>Editar</button>
-                                                    </div>
+                                                    <ItemAvaliacao
+                                                        idJogo={av.id_jogo}
+                                                        estrelas={av.estrelas}
+                                                        texto={av.texto}
+                                                        salvarEdicao={props.editaAvaliacao}
+                                                        apagaAvaliacao={props.apagaAvaliacao}></ItemAvaliacao>
 
                                                 </div>
                                             </div>
@@ -317,7 +314,7 @@ function Perfil(props) {
                                             <div className="row">
 
                                                 <div className="foto_perfil col-md-3 align-items-center">
-                                                    <img src={perfil.id_imagem_perfil ? `${url}/arquivo/${perfil.id_imagem_perfil}` : semfoto} alt="" className="img-fluid w-25 rounded-circle" />
+                                                    <img src={seg.id_imagem_perfil ? `${url}/arquivo/${seg.id_imagem_perfil}` : semfoto} alt="" className="img-fluid w-25 rounded-circle" />
                                                     <strong className="text-white ms-2">{seg.seguidor}</strong>
                                                 </div>
 
@@ -348,13 +345,13 @@ function Perfil(props) {
                                             <div className="row">
 
                                                 <div className="foto_perfil col-md-3 align-items-center">
-                                                    <img src={perfil.id_imagem_perfil ? `${url}/arquivo/${perfil.id_imagem_perfil}` : semfoto} alt="" className="img-fluid w-25 rounded-circle" />
+                                                    <img src={seg.id_imagem_perfil ? `${url}/arquivo/${seg.id_imagem_perfil}` : semfoto} alt="" className="img-fluid w-25 rounded-circle" />
                                                     <strong className="text-white ms-2">{seg.seguido}</strong>
                                                 </div>
 
 
                                                 <div className="col-md-9 d-flex justify-content-end align-items-center">
-                                                    <button onClick={() => { props.deixaSeguir(seg.id_usuario) }}>Seguindo</button>
+                                                    <button onClick={() => { props.deixaSeguir(seg.id_usuario) }} className={`border-0 rounded-1 ${styles.btn_seguir}`}>Seguindo</button>
                                                 </div>
                                             </div>
                                         </div>

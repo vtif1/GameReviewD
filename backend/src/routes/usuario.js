@@ -656,7 +656,7 @@ router.get("/me/avaliacoes", autenticaUsuario, async (req, res) => {
     try {
 
         const a = await db.query(
-            "SELECT j.nome jogo, j.id_imagem, a.texto, a.estrelas, a.criado_em, a.atualizado_em FROM avaliacao a JOIN jogo j ON a.id_jogo = j.id_jogo WHERE id_usuario = $1",
+            "SELECT j.nome jogo, j.id_jogo, j.id_imagem, a.texto, a.estrelas, a.criado_em, a.atualizado_em FROM avaliacao a JOIN jogo j ON a.id_jogo = j.id_jogo WHERE id_usuario = $1",
             [logado]);
 
         if (!a.rowCount) {
@@ -674,6 +674,7 @@ router.get("/me/avaliacoes", autenticaUsuario, async (req, res) => {
             avaliacoesUsuario.avaliacoes.push(
                 {
                     jogo: avaliacao.jogo,
+                    id_jogo: avaliacao.id_jogo,
                     id_imagem: avaliacao.id_imagem,
                     texto: avaliacao.texto,
                     estrelas: avaliacao.estrelas,
@@ -749,7 +750,7 @@ router.get("/me/colecao", autenticaUsuario, async (req, res) => {
     try {
 
         const colecao = await db.query(
-            `SELECT u.username, j.id_jogo, j.nome, j.descricao, j.data_lancamento, cju.favorito FROM usuario u
+            `SELECT u.username, j.id_jogo, j.nome, j.descricao, j.data_lancamento, cju.favorito, cju.status FROM usuario u
             LEFT JOIN colecao_jogo_usuario cju ON u.id_usuario = cju.id_usuario
             LEFT JOIN jogo j ON j.id_jogo = cju.id_jogo
             WHERE u.id_usuario = $1`,
@@ -770,7 +771,8 @@ router.get("/me/colecao", autenticaUsuario, async (req, res) => {
                         jogo: jogo.nome,
                         descricao: jogo.descricao,
                         data_lancamento: jogo.data_lancamento,
-                        favorito: jogo.favorito
+                        favorito: jogo.favorito,
+                        status: jogo.status
                     }
                 )
             }
@@ -913,7 +915,7 @@ router.patch("/me/colecao/:id", autenticaUsuario, verificaId, async (req, res) =
         return res.status(200).json({ msg: "Status atualizado." });
 
     } catch (error) {
-        return res.status(500).json({ msg: "Erro geral." });
+        return res.status(500).json({ msg: error.message });
     }
 })
 
@@ -1129,7 +1131,7 @@ router.get("/:id/seguidores", verificaId, async (req, res) => {
         );
 
         for (const seguidor of seg.rows) {
-            seguidores.seguidores.push(seguidor.seguidor)
+            seguidores.seguidores.push(seguidor)
         }
 
         return res.status(200).json(seguidores);

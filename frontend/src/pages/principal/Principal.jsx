@@ -100,7 +100,7 @@ function Principal(props) {
                 </div>
             </nav>
 
-            <main>
+            <main className="bg-dark">
 
                 <section>
                     <ExibeJogoFeed jogos={jogos} fotosJogos={fotosJogos}></ExibeJogoFeed>
