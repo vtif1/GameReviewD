@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import JogoFeed from "../../components/JogoFeed/JogoFeed";
 import semfoto from "../../../src/assets/imagens/semfoto.png";
 import jogoSemFoto from "../../assets/imagens/neon-video-game-controller-line-260nw-2663195189.jpg"
@@ -13,8 +13,6 @@ const url = "http://localhost:3000";
 function Perfil(props) {
     const [aba, setAba] = useState("colecao");
 
-    const [estrelas, setEstrelas] = useState(0);
-    const [texto, setTexto] = useState("");
 
     const perfil = props.perfil;
     const seguidores = props.seguidores;

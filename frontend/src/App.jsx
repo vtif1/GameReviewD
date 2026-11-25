@@ -311,6 +311,34 @@ function App() {
 
   }
 
+  async function segueUsuario(idUsuario) {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    let option = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    }
+
+    try {
+
+      const res = await fetch(`${url}/usuario/me/seguindo/${idUsuario}`, option);
+
+      if (!res.ok) {
+        const erro = await res.json();
+        throw new Error(erro.msg);
+      }
+
+      await carregaSeguindo();
+      
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   async function deixaSeguir(idUsuario) {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -507,7 +535,7 @@ function App() {
       <Routes>
 
         <Route path='/' element={
-          <Principal jogos={jogos} usuarios={usuarios} fotosJogos={imgs} usuarioLogado={usuarioLogado} admin={admin}></Principal>
+          <Principal jogos={jogos} usuarios={usuarios} fotosJogos={imgs} usuarioLogado={usuarioLogado} admin={admin} seguirUsuario={segueUsuario}></Principal>
         } />
 
         <Route path='/cadastro' element={

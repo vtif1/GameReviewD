@@ -71,7 +71,7 @@ router.get("/me", autenticaUsuario, async (req, res) => {
 
     try {
 
-        const usuario = await db.query("SELECT nome, username, data_nasc, bio, id_imagem_perfil FROM usuario WHERE id_usuario = $1", [logado]);
+        const usuario = await db.query("SELECT id_usuario, nome, username, data_nasc, bio, id_imagem_perfil FROM usuario WHERE id_usuario = $1", [logado]);
         return res.status(200).json(usuario.rows[0]);
 
     } catch (error) {

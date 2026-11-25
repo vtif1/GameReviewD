@@ -1,0 +1,143 @@
+
+.secao_usuarios {
+    padding: 45px 5%;
+    background-color: #0d111b;
+    color: white;
+}
+
+.cabecalho {
+    margin-bottom: 25px;
+}
+
+.cabecalho h2 {
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.cabecalho p {
+    color: #aeb6c5;
+    margin: 0;
+}
+
+/* Lista horizontal */
+.lista_usuarios {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px 3px 20px;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+}
+
+/* Barra de rolagem */
+.lista_usuarios::-webkit-scrollbar {
+    height: 7px;
+}
+
+.lista_usuarios::-webkit-scrollbar-track {
+    background: #1b2230;
+    border-radius: 10px;
+}
+
+.lista_usuarios::-webkit-scrollbar-thumb {
+    background: #1769ff;
+    border-radius: 10px;
+}
+
+/* Cartão */
+.card_usuario {
+    flex: 0 0 190px;
+    min-height: 240px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px 15px;
+
+    background-color: #151c2a;
+    border: 1px solid #252f43;
+    border-radius: 12px;
+
+    text-align: center;
+
+    scroll-snap-align: start;
+    transition: 0.3s;
+}
+
+.card_usuario:hover {
+    border-color: #1769ff;
+    transform: translateY(-5px);
+}
+
+/* Foto */
+.foto_container {
+    width: 85px;
+    height: 85px;
+    margin-bottom: 15px;
+}
+
+.foto_perfil,
+.foto_padrao {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1769ff;
+}
+
+.foto_padrao {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #25334d;
+    color: white;
+
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Informações */
+.card_usuario h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.username {
+    font-size: 0.85rem;
+    color: #9ca9bd;
+    margin-bottom: 15px;
+}
+
+/* Botão seguir */
+.btn_seguir {
+    width: 100%;
+    padding: 9px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #1769ff;
+    color: white;
+
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn_seguir:hover {
+    background-color: #0050d5;
+}
+
+.sem_usuarios {
+    color: #aeb6c5;
+}

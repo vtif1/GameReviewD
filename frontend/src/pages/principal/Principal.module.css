@@ -7,6 +7,7 @@
     font-family: 'Comfortaa', sans-serif;
 
 
+}
 .nav_item {
     transition: transform 0.3s ease
 }
@@ -14,8 +15,6 @@
 .nav_item:hover {
     transform: scale(1.05)
 }
-}
-
 
 .nav {
     background-color: #080b12;
@@ -25,7 +24,6 @@
     margin-left: 10px;
 }
 
-/* HERO */
 .hero {
     position: relative;
     width: 100%;
@@ -34,7 +32,6 @@
     background-color: #080b12;
 }
 
-/* CARROSSEL */
 .hero_img {
     width: 100%;
     height: 550px;
@@ -42,7 +39,7 @@
     filter: brightness(35%);
 }
 
-/* TEXTO SOBRE AS IMAGENS */
+
 .hero_content {
     position: absolute;
     z-index: 5;
@@ -60,16 +57,17 @@
     font-size: 3rem;
     font-weight: bold;
     margin-bottom: 20px;
+    font-family: "Bebas Neue", sans-serif;
 }
 
 .hero_content p {
     font-size: 1.15rem;
+    font-family: 'Comfortaa', sans-serif;
     color: #d1d5db;
     margin-bottom: 30px;
     line-height: 1.6;
 }
 
-/* BOTÕES */
 .hero_buttons {
     display: flex;
     align-items: center;
@@ -81,6 +79,7 @@
 .btn_login {
     display: inline-block;
     padding: 12px 25px;
+    font-family: "Comfortaa", sans-serif;
 
     border-radius: 6px;
 
@@ -112,7 +111,6 @@
     transform: translateY(-3px);
 }
 
-/* RESPONSIVIDADE */
 @media (max-width: 768px) {
 
     .hero {
