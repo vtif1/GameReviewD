@@ -1,3 +1,7 @@
+.fundo {
+    background: linear-gradient(to left, black, rgb(0, 0, 179), black );
+}
+
 .nav {
     background: linear-gradient(to left, black, rgb(0, 0, 179), black );
     font-family: 'Comfortaa', sans-serif;

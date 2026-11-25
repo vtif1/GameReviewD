@@ -10,6 +10,7 @@ import jogo3 from "../../assets/imagens/FSYACATO3VO4NKYRS5VI6URUCE.jpg";
 import ExibeJogoFeed from "../../components/JogoFeed/ExibeJogoFeed";
 
 import { Link } from "react-router-dom";
+import ListaUsuarios from "../../components/ListaUsuarios/ListaUsuarios";
 
 function Principal(props) {
 
@@ -21,7 +22,6 @@ function Principal(props) {
     return (
         <>
 
-            {/* NAVBAR */}
             <nav className={`navbar navbar-expand-lg navbar-dark shadow ${styles.nav}`}>
                 <div className="container">
 
@@ -96,7 +96,6 @@ function Principal(props) {
             </nav>
 
 
-            {/* HERO COM CARROSSEL */}
             <section className={styles.hero}>
 
                 <div
@@ -105,8 +104,6 @@ function Principal(props) {
                     data-bs-ride="carousel"
                     data-bs-interval="5000"
                 >
-
-                    {/* Indicadores */}
                     <div className="carousel-indicators">
 
                         <button
@@ -132,7 +129,6 @@ function Principal(props) {
                     </div>
 
 
-                    {/* Imagens */}
                     <div className="carousel-inner">
 
                         <div className="carousel-item active">
@@ -150,7 +146,6 @@ function Principal(props) {
                     </div>
 
 
-                    {/* TEXTO E BOTÕES SOBRE AS IMAGENS */}
                     <div className={styles.hero_content}>
 
                         <h1>Seu universo gamer começa aqui.</h1>
@@ -189,7 +184,6 @@ function Principal(props) {
                     </div>
 
 
-                    {/* CONTROLES LATERAIS */}
                     <button
                         className="carousel-control-prev"
                         type="button"
@@ -213,8 +207,11 @@ function Principal(props) {
             </section>
 
 
-            {/* CATÁLOGO DE JOGOS */}
             <main>
+
+                <section>
+                    <ListaUsuarios usuarios={props.usuarios} usuarioLogado={props.usuarioLogado} seguirUsuario={props.seguirUsuario}></ListaUsuarios>
+                </section>
 
                 <section>
                     <ExibeJogoFeed

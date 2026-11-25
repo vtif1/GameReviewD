@@ -24,3 +24,7 @@
     padding-left: 7px;
     padding-right: 7px;
 }
+
+.btn_alterar:hover {
+    background-color: rgb(88, 88, 88);
+}
