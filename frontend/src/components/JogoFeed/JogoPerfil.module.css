@@ -1,6 +1,5 @@
 .jogo_perfil {
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    cursor: pointer;
 }
 
 .jogo_perfil:hover {
@@ -9,12 +8,30 @@
     box-shadow: 0 10px 25px rgba(124, 77, 255, 0.3);
 }
 
-.jogo_perfil-capa img {
+.jogo_perfil_capa {
+    display: block;
+    height: 170px;
+    overflow: hidden;
+}
+
+.jogo_perfil_capa img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     transition: transform 0.3s ease;
 }
 
-.jogo_perfil:hover .jogo-perfil_capa img {
+.jogo_perfil:hover .jogo_perfil_capa img {
     transform: scale(1.06);
+}
+
+.titulo_jogo {
+    color: inherit;
+    text-decoration: none;
+}
+
+.titulo_jogo:hover {
+    text-decoration: underline;
 }
 
 .btn_funcao {

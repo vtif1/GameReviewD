@@ -1,12 +1,14 @@
 import { useState } from "react";
-import JogoFeed from "../../components/JogoFeed/JogoFeed";
+import { Link, Navigate } from "react-router-dom";
 import semfoto from "../../../src/assets/imagens/semfoto.png";
 import jogoSemFoto from "../../assets/imagens/neon-video-game-controller-line-260nw-2663195189.jpg"
-import logotipo from "../../assets/imagens/Neon Five-Star Gaming Controller Emblem.png"
+// import logotipo from "../../assets/imagens/Neon Five-Star Gaming Controller Emblem.png"
 
 import styles from "./Perfil.module.css";
 import JogoPerfil from "../../components/JogoFeed/JogoPerfil";
 import ItemAvaliacao from "./ItemAvaliacao";
+import Nav from "../../components/Nav/Nav";
+import Rodape from "../../components/Rodape/Rodape";
 
 const url = "http://localhost:3000";
 
@@ -17,21 +19,18 @@ function Perfil(props) {
     const perfil = props.perfil;
     const seguidores = props.seguidores;
 
-    console.log("Seguidores: ", seguidores);
     const seguindo = props.seguindo;
-    console.log("Seguindo: ", seguindo)
     const colecao = props.colecaoJogos.jogos ?? [];
     const avaliacoes = props.avaliacoes.avaliacoes ?? [];
     const favoritos = props.favoritos.favoritos ?? [];
 
-    console.log("Favoritos: ", favoritos)
-    console.log("Avaliações: ", avaliacoes)
-
     const isAdmin = props.admin;
 
-    console.log("Seguidores: ", seguidores)
+    if (!perfil && props.perfilCarregado) {
+        return <Navigate to="/login" />;
+    }
 
-    if (!perfil || !colecao || !avaliacoes || !favoritos) {
+    if (!perfil) {
         return (
             <div className="min-vh-100 d-flex align-items-center justify-content-center bg-dark" data-bs-theme="dark">
                 <div className="spinner-border text-primary" role="status">
@@ -42,7 +41,25 @@ function Perfil(props) {
     }
 
     const jogosColecao = colecao ?? [];
-    console.log("Jogos ai: ", jogosColecao)
+    const jogosCatalogo = props.jogos || [];
+
+    function buscaImagem(idJogo) {
+        for (const jogo of jogosCatalogo) {
+            if (jogo.id_jogo === idJogo) {
+                return jogo.id_imagem;
+            }
+        }
+        return null;
+    }
+
+    function buscaStatus(idJogo) {
+        for (const jogo of jogosColecao) {
+            if (jogo.id_jogo === idJogo) {
+                return jogo.status;
+            }
+        }
+        return "quero_jogar";
+    }
 
     const fotoPerfil = perfil.id_imagem_perfil ? `${url}/arquivo/${perfil.id_imagem_perfil}` : semfoto;
 
@@ -54,76 +71,7 @@ function Perfil(props) {
 
     return (
         <>
-            <nav className={`navbar navbar-expand-lg navbar-dark shadow ${styles.nav}`}>
-                <div className="container">
-
-                    <a className="navbar-brand fw-bold" href="/">
-                        <img
-                            src={logotipo}
-                            alt="Logotipo"
-                            width="35"
-                            height="35"
-                            className="d-inline-block align-text-center me-2"
-                        />
-                        GameReviewD
-                    </a>
-
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarLogin"
-                        aria-controls="navbarLogin"
-                        aria-expanded="false"
-                        aria-label="Alternar navegação"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div className="collapse navbar-collapse" id="navbarLogin">
-                        <ul className="navbar-nav ms-auto">
-
-                            {isAdmin ? (
-                                <>
-                                    <li className={`nav-item ${styles.nav_item}`}>
-                                        <a className="nav-link active" href="/">Início</a>
-                                    </li>
-
-                                    <li className={`nav-item ${styles.nav_item}`}>
-                                        <a className="nav-link" href="/me/profile">Perfil</a>
-                                    </li>
-
-                                    <li className={`nav-item ${styles.nav_item}`}>
-                                        <a className="nav-link" href="/">Configurações restritas</a>
-                                    </li>
-
-                                    <li className={`nav-item ${styles.nav_item}`}>
-                                        <a className="nav-link" href="/">Sair da conta</a>
-                                    </li>
-                                </>
-
-                            ) : (
-                                <>
-                                    <li className={`nav-item ${styles.nav_item}`}>
-                                        <a className="nav-link" href="/">Início</a>
-                                    </li>
-
-                                    <li className={`nav-item ${styles.nav_item}`}>
-                                        <a className="nav-link active" href="/me/profile">Perfil</a>
-                                    </li>
-
-                                    <li className={`nav-item ${styles.nav_item}`}>
-                                        <a className="nav-link" href="/">Sair da conta</a>
-                                    </li>
-                                </>
-                            )}
-
-
-                        </ul>
-                    </div>
-
-                </div>
-            </nav>
+            <Nav isLogado={props.logado} isAdmin={isAdmin} logout={props.logout} nome_pagina={"perfil"} />
 
             <main className={`min-vh-100 bg-body py-5 ${styles.fundo_pagina}`} data-bs-theme="dark">
                 <div className="container" style={{ maxWidth: "960px" }}>
@@ -162,6 +110,10 @@ function Perfil(props) {
                                 </div>
 
                                 <div className="col-12 col-md-auto text-center">
+                                    <Link to="/me/editar" className={`btn btn-outline-primary me-2 ${styles.fonte_comfortaa}`}>
+                                        Editar perfil
+                                    </Link>
+
                                     <button className={`btn btn-outline-danger ${styles.fonte_comfortaa}`} onClick={props.logout}>
                                         Sair da conta
                                     </button>
@@ -205,6 +157,7 @@ function Perfil(props) {
                                     <div className="col-12 col-sm-6 col-lg-4" key={jogo.id_jogo}>
                                         <JogoPerfil
                                             jogo={jogo}
+                                            id_imagem={buscaImagem(jogo.id_jogo)}
                                             status_jogo={jogo.status}
                                             fav_desfavJogo={props.fav_desfavJogo}
                                             apagaJogoColecao={props.apagaJogoColecao}
@@ -227,8 +180,11 @@ function Perfil(props) {
                                     <div className="col-12 col-sm-6 col-lg-4" key={jogo.id_jogo}>
                                         <JogoPerfil
                                             jogo={jogo}
+                                            id_imagem={jogo.imagem}
+                                            status_jogo={buscaStatus(jogo.id_jogo)}
                                             fav_desfavJogo={props.fav_desfavJogo}
                                             apagaJogoColecao={props.apagaJogoColecao}
+                                            alteraStatusJogo={props.alteraStatusJogo}
                                         />
                                     </div>
                                 ))}
@@ -262,7 +218,7 @@ function Perfil(props) {
 
                                                     <div className="d-flex justify-content-between align-items-start">
                                                         <div>
-                                                            <strong>{av.jogo}</strong>
+                                                            <Link to={`/jogo/${av.id_jogo}`} className="text-decoration-none fw-bold">{av.jogo}</Link>
                                                             <span className="badge text-bg-warning ms-3">★ {av.estrelas}</span>
                                                         </div>
 
@@ -313,7 +269,7 @@ function Perfil(props) {
 
                                                 <div className="foto_perfil col-md-3 align-items-center">
                                                     <img src={seg.id_imagem_perfil ? `${url}/arquivo/${seg.id_imagem_perfil}` : semfoto} alt="" className="img-fluid w-25 rounded-circle" />
-                                                    <strong className="text-white ms-2">{seg.seguidor}</strong>
+                                                    <Link to={`/usuario/${seg.id_usuario}`} className="text-white ms-2 fw-bold text-decoration-none">{seg.seguidor}</Link>
                                                 </div>
 
 
@@ -344,7 +300,7 @@ function Perfil(props) {
 
                                                 <div className="foto_perfil col-md-3 align-items-center">
                                                     <img src={seg.id_imagem_perfil ? `${url}/arquivo/${seg.id_imagem_perfil}` : semfoto} alt="" className="img-fluid w-25 rounded-circle" />
-                                                    <strong className="text-white ms-2">{seg.seguido}</strong>
+                                                    <Link to={`/usuario/${seg.id_usuario}`} className="text-white ms-2 fw-bold text-decoration-none">{seg.seguido}</Link>
                                                 </div>
 
 
@@ -364,6 +320,8 @@ function Perfil(props) {
 
                 </div>
             </main>
+
+            <Rodape></Rodape>
         </>
 
     );

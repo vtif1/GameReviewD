@@ -22,15 +22,33 @@ O objetivo geral do projeto é desenvolver uma aplicação web que permita catal
 As funcionalidades e as permissões são divididas entre usuários comuns e administradores.
 
 ### Usuário comum 👤
-- Consultar o catálogo de jogos;
-- Avaliar jogos com notas de 1 a 5 estrelas e comentários;
-- Organizar jogos em uma coleção pessoal;
+- Consultar o catálogo de jogos, com busca por nome e filtro por gênero;
+- Ver a página de cada jogo, com descrição, desenvolvedoras, plataformas, gêneros, média e avaliações de outros usuários;
+- Avaliar jogos com notas de 1 a 5 estrelas e comentários (editar e apagar as avaliações pelo perfil);
+- Organizar jogos em uma coleção pessoal, alterando o status (quero jogar, jogando, finalizado ou abandonado);
 - Adicionar jogos aos favoritos;
-- Visualizar e acompanhar outros usuários, além de conseguir segui-los;
+- Visualizar o perfil de outros usuários (coleção e avaliações), além de seguir e deixar de seguir;
 
 ### Administrador 💼
-- Cadastrar, consultar, editar e excluir jogos;
-- Gerenciar desenvolvedoras, plataformas e gêneros;
+- Cadastrar, consultar, editar e excluir jogos, incluindo suas desenvolvedoras, plataformas e gêneros;
+- Cadastrar, editar e excluir desenvolvedoras, plataformas e gêneros;
+- Gerenciar usuários (visualizar e excluir contas);
+
+### Páginas do frontend 🗺️
+
+| Rota | Descrição |
+| --- | --- |
+| `/` | Página inicial, com lista de jogadores e catálogo de jogos |
+| `/login` e `/cadastro` | Autenticação e criação de conta |
+| `/jogo/:id` | Página do jogo, com avaliações, coleção e favoritos |
+| `/me/profile` | Perfil do usuário logado (coleção, favoritos, avaliações, seguidores e seguindo) |
+| `/usuario/:id` | Perfil de outro usuário |
+| `/administracao` | Menu de funções do administrador |
+| `/admin/jogo/adicionar` e `/admin/jogo/editar` | CRUD de jogos |
+| `/admin/plataforma/adicionar` e `/admin/plataforma/editar` | CRUD de plataformas |
+| `/admin/genero/adicionar` e `/admin/genero/editar` | CRUD de gêneros |
+| `/admin/desenvolvedora/adicionar` e `/admin/desenvolvedora/editar` | CRUD de desenvolvedoras |
+| `/admin/usuarios` | Gerenciamento de usuários |
 
 ## Como iniciar o projeto 🚀
 
@@ -63,7 +81,7 @@ Mas se preferir uma chave mais criptografada, execute o seguinte comando no term
 
 Após isso, acrescente o valor ao lado do JWT_SECRET, sem utilizar aspas ou espaço.
 
-Agora, no terminal, abra a pasta do backend e execute o seguinte comando:
+Agora, no terminal, abra a pasta raiz do projeto (onde está o arquivo "docker-compose.yml") e execute o seguinte comando:
 
 ```bash
 docker compose up --build -d
@@ -77,7 +95,9 @@ docker compose down -v
 Após a inicialização, o webservice pode ser acessado em http://localhost:3000. A interface gráfica de controle do banco de dados pode ser acessada em http://localhost:8081.
 
 ## Frontend 💻
-No terminal, abra a pasta do frontend e execute os seguintes comandos:
+O comando do Docker acima também inicializa o frontend, que pode ser acessado em http://localhost:5173.
+
+Caso prefira executar o frontend fora do Docker, suba apenas o backend e o banco com `docker compose up --build -d node database pgweb`, abra a pasta do frontend no terminal e execute os seguintes comandos:
 
 ```bash
 npm install
@@ -86,6 +106,8 @@ npm run dev
 
 O comando "npm install" instala as dependências no projeto, e o "npm run dev" inicializa o servidor React.
 Após a inicialização, o site pode ser acessado em http://localhost:5173.
+
+> O frontend acessa a API em http://localhost:3000, então o backend precisa estar em execução.
 
 ## Credenciais de acesso 🔑
 

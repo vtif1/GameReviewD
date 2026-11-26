@@ -43,7 +43,7 @@ router.get("/", async (req, res) => {
 
     try {
 
-        const r = await db.query("SELECT nome, descricao FROM plataforma");
+        const r = await db.query("SELECT id_plataforma, nome, descricao FROM plataforma");
 
         if (!r.rowCount) {
             return res.status(404).json({ msg: "Nenhuma plataforma cadastrada." })

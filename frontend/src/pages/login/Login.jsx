@@ -3,6 +3,7 @@ import logotipo from "../../assets/imagens/Neon Five-Star Gaming Controller Embl
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Nav from "../../components/Nav/Nav";
 
 
 function Login(props) {
@@ -26,52 +27,7 @@ function Login(props) {
 
         <>
 
-            <nav className={`navbar navbar-expand-lg navbar-dark shadow ${styles.nav}`}>
-                <div className="container">
-
-                    <a className="navbar-brand fw-bold" href="/">
-                        <img
-                            src={logotipo}
-                            alt="Logotipo"
-                            width="35"
-                            height="35"
-                            className="d-inline-block align-text-center me-2"
-                        />
-                        GameReviewD
-                    </a>
-
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarLogin"
-                        aria-controls="navbarLogin"
-                        aria-expanded="false"
-                        aria-label="Alternar navegação"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div className="collapse navbar-collapse" id="navbarLogin">
-                        <ul className="navbar-nav ms-auto">
-
-                            <li className={`nav-item ${styles.nav_item}`}>
-                                <a className="nav-link" href="/">Início</a>
-                            </li>
-
-                            <li className={`nav-item ${styles.nav_item}`}>
-                                <a className="nav-link" href="/cadastro">Cadastro</a>
-                            </li>
-
-                            <li className={`nav-item ${styles.nav_item}`}>
-                                <a className="nav-link active" href="/login">Login</a>
-                            </li>
-
-                        </ul>
-                    </div>
-
-                </div>
-            </nav>
+            <Nav isLogado={props.isLogado} isAdmin={props.isAdmin} logout={props.logout} nome_pagina={"login"}/>
 
             <main className={`min-vh-100 d-flex justify-content-center align-items-center p-5 ${styles.fundo_pagina}`}>
                 <div className="container" style={{ maxWidth: "900px" }}>

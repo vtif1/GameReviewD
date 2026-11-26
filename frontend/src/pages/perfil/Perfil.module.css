@@ -38,19 +38,6 @@
     text-decoration: underline;
 }
 
-.nav {
-    background: black;
-    font-family: 'Comfortaa', sans-serif;
-    padding: 5px;
-}
-
-.nav_item {
-    transition: transform 0.3s ease
-}
-
-.nav_item:hover {
-    transform: scale(1.05)
-}
 
 .btn_aba {
     transition: background-color 0.4s ease;

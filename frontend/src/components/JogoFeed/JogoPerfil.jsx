@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import semFoto from "../../assets/imagens/neon-video-game-controller-line-260nw-2663195189.jpg";
 import styles from "./JogoPerfil.module.css";
 
@@ -8,10 +9,7 @@ function JogoPerfil(props) {
     const jogo = props.jogo;
     const [status, setStatus] = useState(props.status_jogo)
 
-    console.log("Status: ", props.status_jogo)
-    console.log("Jogo: ", jogo)
-
-    const imagem = jogo.id_imagem ? `${url}/${jogo.id_imagem}` : semFoto;
+    const imagem = props.id_imagem ? `${url}/${props.id_imagem}` : semFoto;
 
     const listaStatus = [
         { id: 1, status: "quero_jogar", texto: "Quero jogar" },
@@ -23,13 +21,13 @@ function JogoPerfil(props) {
     return (
         <article className={`card jogo-perfil h-100 border-secondary-subtle overflow-hidden ${styles.jogo_perfil}`}>
 
-            <div className={`${styles.jogo_perfil_capa}`}>
+            <Link to={`/jogo/${jogo.id_jogo}`} className={styles.jogo_perfil_capa}>
                 <img
                     src={imagem}
                     alt={`Capa de ${jogo.jogo}`}
                     className="object-fit-cover"
                 />
-            </div>
+            </Link>
 
             <div className="container card-body p-3">
                 <div className="row">
@@ -37,14 +35,18 @@ function JogoPerfil(props) {
                     <div className="col-lg-10">
 
                         <h5 className="card-title fs-6 fw-bold mb-1 text-truncate" title={jogo.jogo}>
-                            {jogo.jogo}
+                            <Link to={`/jogo/${jogo.id_jogo}`} className={styles.titulo_jogo}>
+                                {jogo.jogo}
+                            </Link>
                         </h5>
 
-                        <p className="card-text small text-body-secondary mb-0">
-                            {new Date(jogo.data_lancamento).getFullYear()}
-                        </p>
+                        {jogo.data_lancamento && (
+                            <p className="card-text small text-body-secondary mb-1">
+                                {new Date(jogo.data_lancamento).getFullYear()}
+                            </p>
+                        )}
 
-                        <select name="" id="" value={status} onChange={(e) => setStatus(e.target.value)} role="button">
+                        <select name="status" id={`status-${jogo.id_jogo}`} value={status} onChange={(e) => setStatus(e.target.value)} role="button">
 
                             {listaStatus.map((st) => (
                                 <option key={st.id} value={st.status}>{st.texto}</option>

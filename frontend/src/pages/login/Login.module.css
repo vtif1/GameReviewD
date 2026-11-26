@@ -6,11 +6,6 @@
     background: linear-gradient(to left, black, rgb(0, 0, 179), black );
 }
 
-.nav {
-    background: linear-gradient(to left, black, rgb(0, 0, 179), black );
-    font-family: 'Comfortaa', sans-serif;
-}
-
 .fundo_login {
     background-color: rgb(0, 0, 60);
 }
@@ -42,12 +37,3 @@
     border-color: #0038bb;
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15)
 }
-
-.nav_item {
-    transition: transform 0.3s ease
-}
-
-.nav_item:hover {
-    transform: scale(1.05)
-}
-

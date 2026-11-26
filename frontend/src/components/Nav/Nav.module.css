@@ -1,0 +1,21 @@
+.nav {
+    background: linear-gradient(to left, black, rgb(0, 0, 179), black );
+    font-family: 'Comfortaa', sans-serif;
+
+
+}
+.nav_item {
+    transition: transform 0.3s ease
+}
+
+.nav_item:hover {
+    transform: scale(1.05)
+}
+
+.nav {
+    background-color: #080b12;
+}
+
+.nav_item {
+    margin-left: 10px;
+}

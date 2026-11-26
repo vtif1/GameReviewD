@@ -1,0 +1,104 @@
+.fundo_pagina {
+    background: linear-gradient(to left, black, rgb(0, 0, 179), black);
+}
+
+.fundo_formulario {
+    background-color: rgb(0, 0, 60);
+}
+
+.div_formulario {
+    box-shadow: 1px 1px 10px rgb(138, 245, 255);
+    font-family: 'Bebas Neue', sans-serif;
+    border-radius: 16px;
+    border: none;
+}
+
+.input {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 16px;
+    font-family: 'Comfortaa', sans-serif;
+    color: #ffffff;
+    background-color: rgb(0, 0, 51);
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+    border-color: #0038bb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.input:hover {
+    border-color: #0038bb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.input::placeholder {
+    color: #aeb6c5;
+}
+
+.input[type="file"] {
+    cursor: pointer;
+}
+
+.input[type="file"]::file-selector-button {
+    color: white;
+    background-color: #0038bb;
+    border: none;
+    border-radius: 5px;
+    padding: 7px 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.input[type="file"]::file-selector-button:hover {
+    background-color: #1769ff;
+}
+
+textarea.input {
+    resize: vertical;
+    min-height: 130px;
+}
+
+
+/* Lista de opções (desenvolvedoras, gêneros e plataformas) */
+.grupo_opcoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px;
+    background-color: rgb(0, 0, 51);
+    border: 1.5px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+.opcao {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 0.9rem;
+    background-color: rgba(23, 105, 255, 0.12);
+    border: 1px solid rgba(23, 105, 255, 0.5);
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.sem_opcoes {
+    margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 0.9rem;
+    color: #aeb6c5;
+}
+
+.mensagem {
+    text-align: center;
+    color: rgb(0, 255, 150);
+    font-family: 'Comfortaa', sans-serif;
+    margin-bottom: 15px;
+}

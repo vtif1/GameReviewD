@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logotipo from "../../assets/imagens/Neon Five-Star Gaming Controller Emblem.png"
 import styles from "./Cadastro.module.css";
+import Nav from "../../components/Nav/Nav";
+import Rodape from "../../components/Rodape/Rodape";
 
 
 function Cadastro(props) {
@@ -45,52 +47,7 @@ function Cadastro(props) {
 
         <>
 
-            <nav className={`navbar navbar-expand-lg navbar-dark shadow ${styles.nav}`}>
-                <div className="container">
-
-                    <a className="navbar-brand fw-bold" href="/">
-                        <img
-                            src={logotipo}
-                            alt="Logotipo"
-                            width="35"
-                            height="35"
-                            className="d-inline-block align-text-center me-2"
-                        />
-                        GameReviewD
-                    </a>
-
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarCadastro"
-                        aria-controls="navbarCadastro"
-                        aria-expanded="false"
-                        aria-label="Alternar navegação"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-
-                    <div className="collapse navbar-collapse" id="navbarCadastro">
-                        <ul className="navbar-nav ms-auto">
-
-                            <li className={`nav-item ${styles.nav_item}`}>
-                                <a className="nav-link" href="/">Início</a>
-                            </li>
-
-                            <li className={`nav-item ${styles.nav_item}`}>
-                                <a className="nav-link active" href="/cadastro">Cadastro</a>
-                            </li>
-
-                            <li className={`nav-item ${styles.nav_item}`}>
-                                <a className="nav-link" href="/login">Login</a>
-                            </li>
-
-                        </ul>
-                    </div>
-
-                </div>
-            </nav>
+            <Nav isLogado={props.isLogado} isAdmin={props.isAdmin} logout={props.logout} nome_pagina={"cadastro"}/>
 
             <main className={`min-vh-100 d-flex justify-content-center align-items-center p-5 ${styles.fundo_pagina}`}>
                 <div className="container" style={{ maxWidth: "900px" }}>
@@ -244,6 +201,7 @@ function Cadastro(props) {
                     </div>
                 </div>
             </main>
+
 
         </>
 
